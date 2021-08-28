@@ -1,16 +1,17 @@
-<script setup lang="ts"></script>
-
 <template>
-  <router-view />
+  <n-config-provider :theme-overrides="themeOverrides">
+    <router-view />
+  </n-config-provider>
 </template>
+<script setup lang="ts">
+import { NConfigProvider } from 'naive-ui'
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+const themeOverrides = {
+  common: {
+    primaryColorHover: '#000000',
+    primaryColor: '#000000',
+    primaryColorPressed: '#000000',
+    primaryColorSuppl: '#000000'
+  }
 }
-</style>
+</script>
