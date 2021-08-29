@@ -3,16 +3,7 @@
     <div class="login-content-wrapper bg-white flex flex-col items-center">
       <div class="mt-6 text-2xl">欢迎使用</div>
       <div class="mt-1 text-2xl">WonderWrap</div>
-      <div
-        class="
-          login-content-desc
-          mt-3
-          text-base text-gray-400
-          flex flex-col
-          items-center
-          justify-center
-        "
-      >
+      <div class="login-content-desc">
         <span>中国短视频工业化先驱，打造智能、便捷、高</span>
         <span> 效的工作流</span>
       </div>
@@ -97,6 +88,13 @@ const handleValidateClick = () => {
     border-radius: 10px;
     .login-content-desc {
       width: 360px;
+      @apply mt-3;
+      @apply text-base;
+      @apply text-gray-400;
+      @apply flex;
+      @apply flex-col;
+      @apply items-center;
+      @apply justify-center;
     }
   }
 }
