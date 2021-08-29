@@ -56,8 +56,8 @@
  * author: roct
  * date: 2:17 下午 2021/8/28
  */
-import { ref } from 'vue'
-const formRef = ref(null)
+import { Ref, ref } from 'vue'
+const formRef: Ref<HTMLFormElement | null> = ref(null)
 const formValue = ref({
   username: '',
   password: ''
@@ -75,7 +75,7 @@ const rules = {
   }
 }
 const handleValidateClick = () => {
-  formRef.value.validate((errors) => {
+  formRef.value?.validate((errors: any) => {
     if (!errors) {
       console.log('Valid')
     } else {
