@@ -19,22 +19,35 @@
           <n-input v-model:value="formValue.username" placeholder="输入账号" />
         </n-form-item>
         <n-form-item class="mt-3" label="密码" path="password">
-          <n-input placeholder="输入密码" v-model:value="formValue.password" />
+          <n-input
+            type="password"
+            placeholder="输入密码"
+            v-model:value="formValue.password"
+          />
         </n-form-item>
-        <div class="text-gray-300 underline">忘记密码？</div>
         <n-form-item>
           <n-button
-            class="login-content-desc mt-4"
+            class="login-submit-btn mt-4"
             type="primary"
             @click="handleValidateClick"
             attr-type="button"
+            :loading="loading"
           >
             登录
           </n-button>
         </n-form-item>
-
-        <div class="text-gray-300 text-lg underline w-full flex justify-center">
-          免费注册账号
+        <div
+          class="
+            text-gray-300 text-base
+            cursor-pointer
+            underline
+            w-full
+            flex
+            justify-between
+          "
+        >
+          <span>忘记密码？</span>
+          <span>免费注册账号</span>
         </div>
       </n-form>
     </div>
@@ -48,11 +61,22 @@
  * date: 2:17 下午 2021/8/28
  */
 import { Ref, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useMessage } from 'naive-ui'
+// 信息提示
+const message = useMessage()
+// 路由
+const router = useRouter()
+// 创建form的dom
 const formRef: Ref<HTMLFormElement | null> = ref(null)
+// 创建数据结构
 const formValue = ref({
   username: '',
   password: ''
 })
+// loading
+const loading = ref(false)
+// 创建form参数规则
 const rules = {
   username: {
     required: true,
@@ -65,15 +89,46 @@ const rules = {
     trigger: ['input', 'blur']
   }
 }
+/**
+ * @Author roct
+ * @Description 点击登录
+ * @Date 10:01 下午 2021/8/29
+ **/
 const handleValidateClick = () => {
+  if (loading.value) {
+    return
+  }
   formRef.value?.validate((errors: any) => {
     if (!errors) {
-      console.log('Valid')
+      checkLogin(
+        formValue.value.username === 'admin' &&
+          formValue.value.password === 'admin'
+      )
     } else {
-      console.log(errors)
-      console.log('Invalid')
+      message.error('请输入账号/密码')
     }
   })
+}
+/**
+ * @Author roct
+ * @Description 校验登录逻辑
+ * @Date 10:19 下午 2021/8/29
+ **/
+const checkLogin = (state: boolean) => {
+  loading.value = true
+  setTimeout(
+    () => {
+      loading.value = false
+      if (state) {
+        router.push({
+          name: 'Home'
+        })
+      } else {
+        message.error('账号/密码错误')
+      }
+    },
+    state ? 1000 : 1000
+  )
 }
 </script>
 <style scoped lang="scss">
@@ -95,6 +150,12 @@ const handleValidateClick = () => {
       @apply flex-col;
       @apply items-center;
       @apply justify-center;
+      :deep(.n-form-item) {
+        width: 100%;
+      }
+    }
+    .login-submit-btn {
+      width: 360px;
     }
   }
 }
