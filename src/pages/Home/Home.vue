@@ -1,7 +1,13 @@
 <template>
-  <div>Home</div>
+  <div class="w-full h-full flex">
+    <Aside />
+    <div class="fixed left-48 top-0 bottom-0 right-0 flex-auto bg-green-50">
+      <router-view />
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
+import Aside from '@/components/Aside.vue'
 /**
  * name: Home
  * description:
