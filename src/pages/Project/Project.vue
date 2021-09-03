@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <n-spin :show="loading">
     <div
       class="
         w-full
@@ -12,7 +12,10 @@
       "
     >
       <Header />
-      <n-button>
+      <n-button
+        @click="createNewProjectClick"
+        :disabled="projectGroupList.length === 0"
+      >
         <template #icon>
           <n-icon>
             <add-icon />
@@ -22,21 +25,37 @@
       </n-button>
     </div>
     <div class="project-content flex">
-      <div class="flex flex-col items-center w-60 bg-gray-100 overflow-auto">
+      <div
+        class="
+          flex flex-col
+          items-center
+          w-60
+          bg-gray-100
+          overflow-auto
+          flex-shrink-0
+        "
+      >
         <div class="mt-4">项目组管理</div>
         <div
           class="project-aside-item"
-          v-for="item in 10"
-          :key="item"
-          :class="item === current.value ? 'active' : ''"
+          v-for="(item, index) of projectGroupList"
+          :key="index"
+          :class="item.id === current.id ? 'active' : ''"
           @click="selectedItemClick(item)"
         >
-          项目组{{ item }}
-          <n-icon class="project-aside-item-icon">
-            <EllipsisHorizontalSharp />
-          </n-icon>
+          {{ item.name || '新建项目组' + (index + 1) }}
+          <n-dropdown
+            trigger="click"
+            @select="(key) => handleSelect(key, item)"
+            :options="options"
+            :show-arrow="true"
+          >
+            <n-icon class="project-aside-item-icon">
+              <EllipsisHorizontalSharp />
+            </n-icon>
+          </n-dropdown>
         </div>
-        <n-button class="mt-4 w-56">
+        <n-button class="mt-4 w-56" @click="addNewProjectGroupClick">
           <template #icon>
             <n-icon>
               <add-icon />
@@ -45,9 +64,80 @@
           新建项目组
         </n-button>
       </div>
-      <div class="flex-auto bg-green-50 h-auto"></div>
+      <div
+        class="
+          flex-auto
+          h-auto
+          p-5
+          flex flex-wrap
+          overflow-auto
+          bg-gray-200
+          pl-10
+        "
+      >
+        <ProjectItem
+          v-for="(item, index) of projectList"
+          :key="index"
+          :parentId="current.id"
+          :id="item.id"
+          :name="item.name"
+          @updateProjectDetail="loadProjectDetail"
+        />
+      </div>
     </div>
-  </div>
+    <n-modal
+      v-model:show="showModal"
+      :show-icon="false"
+      preset="dialog"
+      title="Dialog"
+    >
+      <template #header>
+        <div>提示</div>
+      </template>
+      <div>
+        <n-input v-model:value="editGroup.name" placeholder="请输入新的名字" />
+      </div>
+      <template #action>
+        <div>
+          <n-button class="mr-4" @click="showModal = false">取消</n-button>
+          <n-button
+            type="error"
+            :disabled="!editGroup.name"
+            @click="changeGroupNameClick"
+          >
+            确定
+          </n-button>
+        </div>
+      </template>
+    </n-modal>
+    <n-modal
+      v-model:show="showCreateProjectModal"
+      :show-icon="false"
+      preset="dialog"
+      title="Dialog"
+    >
+      <template #header>
+        <div>提示</div>
+      </template>
+      <div>
+        <n-input v-model:value="newProject.name" placeholder="请输入项目名字" />
+      </div>
+      <template #action>
+        <div>
+          <n-button class="mr-4" @click="showCreateProjectModal = false">
+            取消
+          </n-button>
+          <n-button
+            type="error"
+            :disabled="!newProject.name"
+            @click="newProjectClick"
+          >
+            确定
+          </n-button>
+        </div>
+      </template>
+    </n-modal>
+  </n-spin>
 </template>
 <script lang="ts" setup>
 /**
@@ -56,20 +146,193 @@
  * author: roct
  * date: 9:49 下午 2021/8/31
  */
+
+import { Ref, ref, onMounted } from 'vue'
 import {
   AddOutline as AddIcon,
   EllipsisHorizontalSharp
 } from '@vicons/ionicons5'
+import {
+  getAllProjectGroup,
+  saveAllProjectGroup,
+  deleteProjectGroup,
+  updateProjectGroup
+} from '@/api/api'
+import { getProjectList, saveProjectList } from '@/api/projectApi'
+import { ProjectItemGroupType, ProjectItemType } from '@/api/apiType'
+import { useMessage, useDialog } from 'naive-ui'
 import Header from '@/components/Header.vue'
-import { Ref, ref } from 'vue'
-import { ProjectItemType } from './ProjectTypes'
-const current: Ref<ProjectItemType> = ref({
-  name: '',
-  value: 2
+import ProjectItem from './component/ProjectItem.vue'
+import { generateUUID } from '@/utils/uuid'
+// 信息提示
+const message = useMessage()
+// 获取dialog
+const dialog = useDialog()
+// 是否显示重命名
+const showModal = ref(false)
+// 创建新项目是否显示弹窗
+const showCreateProjectModal = ref(false)
+// 项目组列表
+const projectGroupList: Ref<ProjectItemGroupType[]> = ref([])
+// 项目列表
+const projectList: Ref<ProjectItemType[]> = ref([])
+// 当前选中的项目组
+const current: Ref<ProjectItemGroupType> = ref({
+  id: '',
+  name: ''
 })
-const selectedItemClick = (value: number) => {
-  current.value.value = value
+// 要创建的项目
+const newProject: Ref<ProjectItemType> = ref({
+  id: '',
+  name: ''
+})
+// 当前要操作的项目组
+const editGroup: Ref<ProjectItemGroupType> = ref({
+  id: '',
+  name: ''
+})
+// loading
+const loading = ref(false)
+// dropdown的item内容
+const options = [
+  {
+    label: '重命名',
+    key: 'edit'
+  },
+  {
+    label: '删除',
+    key: 'delete'
+  }
+]
+/**
+ * @Author roct
+ * @Description 创建新项目点击确定
+ * @Date 12:11 上午 2021/9/4
+ **/
+const newProjectClick = async () => {
+  showCreateProjectModal.value = false
+  newProject.value.id = generateUUID()
+  projectList.value.push(newProject.value)
+  console.log('projectList.value', projectList.value)
+  await saveProjectList(current.value.id, projectList.value)
+  newProject.value = {
+    id: '',
+    name: ''
+  }
+  await loadProjectDetail()
 }
+/***
+ * @Author roct
+ * @Description 点击创建新项目
+ * @Date 12:07 上午 2021/9/4
+ **/
+const createNewProjectClick = () => {
+  showCreateProjectModal.value = true
+}
+/***
+ * @Author roct
+ * @Description 点击某个项目组
+ * @Date 9:11 下午 2021/9/3
+ **/
+const selectedItemClick = (item: ProjectItemGroupType) => {
+  current.value = item
+  loadProjectDetail()
+}
+/**
+ * @Author roct
+ * @Description 点击新建项目组
+ * @Date 9:13 下午 2021/9/3
+ **/
+const addNewProjectGroupClick = async () => {
+  const item = {
+    id: generateUUID(),
+    name: '新建项目组' + (projectGroupList.value.length + 1)
+  }
+  projectGroupList.value.push(item)
+  await saveAllProjectGroup(projectGroupList.value)
+  current.value = item
+}
+/**
+ * @Author roct
+ * @Description 点击dropdown
+ * @Date 9:24 下午 2021/9/3
+ **/
+const handleSelect = async (key: string, item: ProjectItemGroupType) => {
+  editGroup.value = item
+  if (key === 'edit') {
+    showModal.value = true
+  }
+  if (key === 'delete') {
+    dialog.error({
+      title: '提示',
+      content: '是否删除?',
+      positiveText: '确定',
+      showIcon: false,
+      negativeText: '取消',
+      onPositiveClick: () => {
+        deleteProjectGroupClick(item)
+      }
+    })
+  }
+}
+/**
+ * @Author roct
+ * @Description 删除项目组
+ * @Date 9:54 下午 2021/9/3
+ **/
+const deleteProjectGroupClick = async (item: ProjectItemGroupType) => {
+  try {
+    await deleteProjectGroup(item)
+    message.success('删除成功')
+    await loadProjectGroup()
+  } catch (e) {
+    message.error('删除失败')
+  }
+}
+/**
+ * @Author roct
+ * @Description 点击更新名字
+ * @Date 10:11 下午 2021/9/3
+ **/
+const changeGroupNameClick = async () => {
+  try {
+    showModal.value = false
+    await updateProjectGroup(editGroup.value)
+    message.success('修改成功')
+    await loadProjectGroup()
+  } catch (e) {
+    message.error('修改失败')
+  }
+}
+/**
+ * @Author roct
+ * @Description 获取当前选中的项目组的详细信息
+ * @Date 12:02 上午 2021/9/4
+ **/
+const loadProjectDetail = async () => {
+  projectList.value = await getProjectList(current.value.id)
+  console.log('current.value.id', current.value.id, projectList.value)
+}
+/**
+ * @Author roct
+ * @Description 加载项目列表
+ * @Date 9:38 下午 2021/9/3
+ **/
+const loadProjectGroup = () => {
+  loading.value = true
+  setTimeout(async () => {
+    projectGroupList.value = await getAllProjectGroup()
+    if (projectGroupList.value.length > 0) {
+      current.value = projectGroupList.value[0]
+      await loadProjectDetail()
+    }
+    loading.value = false
+  }, 1000)
+}
+
+onMounted(() => {
+  loadProjectGroup()
+})
 </script>
 <style scoped lang="scss">
 .project-content {

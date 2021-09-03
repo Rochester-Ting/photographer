@@ -18,7 +18,6 @@
  */
 import { useRoute } from 'vue-router'
 const route = useRoute()
-console.log('route', route)
 const routeList = route.matched
 </script>
 <style scoped lang="scss"></style>
