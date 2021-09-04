@@ -10,25 +10,30 @@
     "
   >
     <div class="mt-4">分镜头列表</div>
-    <div
-      class="sl-aside-item"
-      v-for="(item, index) of slList"
-      :key="index"
-      :class="item.id === current.id ? 'active' : ''"
-      @click="selectedItemClick(item)"
-    >
-      {{ item.name || '新建项目组' + (index + 1) }}
-      <n-dropdown
-        trigger="click"
-        @select="(key) => handleSelect(key, item)"
-        :options="options"
-        :show-arrow="true"
-      >
-        <n-icon class="sl-aside-item-icon">
-          <EllipsisHorizontalSharp />
-        </n-icon>
-      </n-dropdown>
-    </div>
+    <VueDraggableNext v-model="slList" @change="draggableEnd">
+      <transition-group>
+        <div
+          class="sl-aside-item"
+          v-for="(item, index) of slList"
+          :key="index"
+          :class="item.id === current.id ? 'active' : ''"
+          @click="selectedItemClick(item)"
+        >
+          {{ item.name || '新建分镜头' + (index + 1) }}
+          <n-dropdown
+            trigger="click"
+            @select="handleSelect"
+            :options="options"
+            :show-arrow="true"
+          >
+            <n-icon class="sl-aside-item-icon">
+              <EllipsisHorizontalSharp />
+            </n-icon>
+          </n-dropdown>
+        </div>
+      </transition-group>
+    </VueDraggableNext>
+
     <n-button class="mt-4 w-56" @click="addNewSLClick">
       <template #icon>
         <n-icon>
@@ -37,6 +42,14 @@
       </template>
       新建分镜头
     </n-button>
+    <ProjectEditModal
+      v-if="showModal"
+      :showModal="showModal"
+      v-model:inputVal="current.name"
+      placeholder="请输入新的名字"
+      @cancelClick="changeShootNameClick('cancel')"
+      @confirmClick="changeShootNameClick('edit')"
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -50,21 +63,30 @@ import {
   EllipsisHorizontalSharp,
   AddOutline as AddIcon
 } from '@vicons/ionicons5'
+import { VueDraggableNext } from 'vue-draggable-next'
+import ProjectEditModal from '@/Pages/Project/component/ProjectEditModal.vue'
 import { onMounted, Ref, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
-import { getShootList, updateShootList, deleteShootList } from '@/api/shootApi'
+import {
+  getShootList,
+  updateShootList,
+  updateSorted,
+  deleteShootList
+} from '@/api/shootApi'
 import { ShootType } from '@/api/apiType'
 import { generateUUID } from '@/utils/uuid'
 import { useMessage, useDialog } from 'naive-ui'
 const slList: Ref<ShootType> = ref([])
 const emit = defineEmits(['updateSelectedSL'])
 const message = useMessage()
+const route = useRoute()
 const dialog = useDialog()
-const current: ShootType = {
+const showModal = ref(false)
+const current: Ref<ShootType> = ref({
   id: '',
   name: '',
   projectId: ''
-}
+})
 const options = [
   {
     label: '重命名',
@@ -77,20 +99,46 @@ const options = [
 ]
 /**
  * @Author roct
+ * @Description 修改分镜头名称
+ * @Date 10:24 下午 2021/9/4
+ **/
+const changeShootNameClick = async (type: string) => {
+  showModal.value = false
+  if (type === 'edit') {
+    await updateShootList(current.value)
+  }
+  await loadShootList()
+}
+/**
+ * @Author roct
  * @Description 点击创建新的分镜头
  * @Date 7:21 下午 2021/9/4
  **/
 const addNewSLClick = async () => {
   const shoot = {
     id: generateUUID(),
-    projectId: useRoute().query.id + '',
+    projectId: route.query.id + '',
     name: '第' + (slList.value.length + 1) + '场'
   }
   try {
     await updateShootList(shoot)
     message.success('保存成功')
+    await loadShootList()
   } catch (e) {
     message.error('保存失败')
+  }
+}
+/**
+ * @Author roct
+ * @Description 拖拽侧边数据
+ * @Date 8:23 下午 2021/9/4
+ **/
+const draggableEnd = async () => {
+  try {
+    await updateSorted(slList.value, route.query.id + '')
+    await loadShootList()
+  } catch (e) {
+    message.error('调整顺序失败')
   }
 }
 /***
@@ -104,26 +152,39 @@ const selectedItemClick = (item: ShootType) => {
 }
 /**
  * @Author roct
+ * @Description 删除某个分镜头
+ * @Date 10:21 下午 2021/9/4
+ **/
+const deleteShootRequest = async (item: ShootType) => {
+  try {
+    await deleteShootList(item)
+    message.success('删除成功')
+    await loadShootList()
+  } catch (e) {
+    message.error('删除失败')
+  }
+}
+/**
+ * @Author roct
  * @Description 点击dropdown
  * @Date 9:24 下午 2021/9/3
  **/
-const handleSelect = async (key: string, item: ShootType) => {
-  // editGroup.value = item
-  // if (key === 'edit') {
-  //   // showModal.value = true
-  // }
-  // if (key === 'delete') {
-  //   dialog.error({
-  //     title: '提示',
-  //     content: '是否删除?',
-  //     positiveText: '确定',
-  //     showIcon: false,
-  //     negativeText: '取消',
-  //     onPositiveClick: () => {
-  //       // deleteProjectGroupClick(item)
-  //     }
-  //   })
-  // }
+const handleSelect = async (key: string) => {
+  if (key === 'edit') {
+    showModal.value = true
+  }
+  if (key === 'delete') {
+    dialog.error({
+      title: '提示',
+      content: '是否删除?',
+      positiveText: '确定',
+      showIcon: false,
+      negativeText: '取消',
+      onPositiveClick: () => {
+        deleteShootRequest(current.value)
+      }
+    })
+  }
 }
 /***
  * @Author roct
@@ -132,7 +193,7 @@ const handleSelect = async (key: string, item: ShootType) => {
  **/
 const loadShootList = async () => {
   try {
-    slList.value = await getShootList(useRoute().query.id + '')
+    slList.value = await getShootList(route.query.id + '')
     if (slList.value.length > 0) {
       selectedItemClick(slList.value[0])
     }

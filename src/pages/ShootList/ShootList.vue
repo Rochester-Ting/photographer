@@ -18,7 +18,7 @@
       </n-breadcrumb>
     </div>
     <div class="sl-content flex">
-      <SLAside />
+      <SLAside @updateSelectedSL="updateSelectedSL" />
     </div>
   </n-spin>
 </template>
@@ -32,9 +32,19 @@
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SLAside from './components/SLAside.vue'
+import { ShootType } from '@/api/apiType'
+
 const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
+/**
+ * @Author roct
+ * @Description 默认选中侧边栏
+ * @Date 8:12 下午 2021/9/4
+ **/
+const updateSelectedSL = (shoot: ShootType) => {
+  console.log('shoot', shoot)
+}
 </script>
 <style scoped lang="scss">
 .sl-content {
