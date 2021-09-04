@@ -13,13 +13,14 @@
     "
   >
     <n-image
+      @click="toDetail"
       class="flex-shrink-0"
       width="150"
       src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
     />
     <div class="flex-auto">
       <div class="p-3 underline flex items-center flex justify-between">
-        <span class="truncate w-28">{{ props.name }}</span>
+        <span class="truncate w-28" @click="toDetail">{{ props.name }}</span>
         <n-dropdown
           trigger="click"
           @select="handleSelect"
@@ -32,31 +33,14 @@
         </n-dropdown>
       </div>
     </div>
-    <n-modal
-      v-model:show="showModal"
-      :show-icon="false"
-      preset="dialog"
-      title="Dialog"
-    >
-      <template #header>
-        <div>提示</div>
-      </template>
-      <div>
-        <n-input v-model:value="newName" placeholder="请输入新的名字" />
-      </div>
-      <template #action>
-        <div>
-          <n-button class="mr-4" @click="showModal = false">取消</n-button>
-          <n-button
-            type="error"
-            :disabled="Boolean(!newName)"
-            @click="changeGroupNameClick"
-          >
-            确定
-          </n-button>
-        </div>
-      </template>
-    </n-modal>
+    <ProjectEditModal
+      v-if="showModal"
+      :showModal="showModal"
+      v-model:inputVal="newName"
+      placeholder="请输入项目名字"
+      @cancelClick="showModal = false"
+      @confirmClick="changeGroupNameClick"
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -67,8 +51,8 @@
  * date: 10:28 下午 2021/9/3
  */
 import { EllipsisHorizontalSharp } from '@vicons/ionicons5'
-import { ProjectItemGroupType } from '@/api/apiType'
 import { useMessage, useDialog } from 'naive-ui'
+import ProjectEditModal from './ProjectEditModal.vue'
 import { deleteProjectList, updateProjectList } from '@/api/projectApi'
 import {
   ref,
@@ -78,6 +62,8 @@ import {
   defineEmits,
   withDefaults
 } from 'vue' // 信息提示
+import { useRouter } from 'vue-router'
+
 interface ProjectItemType {
   id: string
   name: string
@@ -88,6 +74,7 @@ const props = withDefaults(defineProps<ProjectItemType>(), {
   name: '',
   parentId: ''
 })
+const router = useRouter()
 const newName = ref('')
 watchEffect(() => {
   newName.value = props.name
@@ -109,6 +96,20 @@ const options = [
     key: 'delete'
   }
 ]
+/**
+ * @Author roct
+ * @Description 前往项目详情页面
+ * @Date 12:18 下午 2021/9/4
+ **/
+const toDetail = () => {
+  router.push({
+    name: 'ProjectDetail',
+    query: {
+      id: props.id,
+      parentId: props.parentId
+    }
+  })
+}
 /**
  * @Author roct
  * @Description 修改名字

@@ -82,7 +82,7 @@ const emit = defineEmits(['pushNext'])
 
 const defaultValue = ref('')
 onMounted(() => {
-  defaultValue.value = useRoute().name || 'Project'
+  defaultValue.value = useRoute().meta.key || 'Project'
 })
 
 const changeRouter = (Name: string) => {

@@ -1,29 +1,9 @@
 <template>
   <n-spin :show="loading">
-    <div
-      class="
-        w-full
-        h-16
-        border-b border-solid border-gray-100
-        flex
-        items-center
-        px-10
-        justify-between
-      "
-    >
-      <Header />
-      <n-button
-        @click="createNewProjectClick"
-        :disabled="projectGroupList.length === 0"
-      >
-        <template #icon>
-          <n-icon>
-            <add-icon />
-          </n-icon>
-        </template>
-        新建项目
-      </n-button>
-    </div>
+    <ProjectHeader
+      :projectGroupList="projectGroupList"
+      @createNewProjectClick="createNewProjectClick"
+    />
     <div class="project-content flex">
       <div
         class="
@@ -73,6 +53,7 @@
           overflow-auto
           bg-gray-200
           pl-10
+          content-start
         "
       >
         <ProjectItem
@@ -85,58 +66,22 @@
         />
       </div>
     </div>
-    <n-modal
-      v-model:show="showModal"
-      :show-icon="false"
-      preset="dialog"
-      title="Dialog"
-    >
-      <template #header>
-        <div>提示</div>
-      </template>
-      <div>
-        <n-input v-model:value="editGroup.name" placeholder="请输入新的名字" />
-      </div>
-      <template #action>
-        <div>
-          <n-button class="mr-4" @click="showModal = false">取消</n-button>
-          <n-button
-            type="error"
-            :disabled="!editGroup.name"
-            @click="changeGroupNameClick"
-          >
-            确定
-          </n-button>
-        </div>
-      </template>
-    </n-modal>
-    <n-modal
-      v-model:show="showCreateProjectModal"
-      :show-icon="false"
-      preset="dialog"
-      title="Dialog"
-    >
-      <template #header>
-        <div>提示</div>
-      </template>
-      <div>
-        <n-input v-model:value="newProject.name" placeholder="请输入项目名字" />
-      </div>
-      <template #action>
-        <div>
-          <n-button class="mr-4" @click="showCreateProjectModal = false">
-            取消
-          </n-button>
-          <n-button
-            type="error"
-            :disabled="!newProject.name"
-            @click="newProjectClick"
-          >
-            确定
-          </n-button>
-        </div>
-      </template>
-    </n-modal>
+    <ProjectEditModal
+      v-if="showModal"
+      :showModal="showModal"
+      v-model:inputVal="editGroup.name"
+      placeholder="请输入新的名字"
+      @cancelClick="changeGroupNameClick('cancel')"
+      @confirmClick="changeGroupNameClick('edit')"
+    />
+    <ProjectEditModal
+      v-if="showCreateProjectModal"
+      :showModal="showCreateProjectModal"
+      v-model:inputVal="newProject.name"
+      placeholder="请输入项目名字"
+      @cancelClick="hiddenCreateProject"
+      @confirmClick="newProjectClick"
+    />
   </n-spin>
 </template>
 <script lang="ts" setup>
@@ -161,9 +106,10 @@ import {
 import { getProjectList, saveProjectList } from '@/api/projectApi'
 import { ProjectItemGroupType, ProjectItemType } from '@/api/apiType'
 import { useMessage, useDialog } from 'naive-ui'
-import Header from '@/components/Header.vue'
 import ProjectItem from './component/ProjectItem.vue'
+import ProjectEditModal from './component/ProjectEditModal.vue'
 import { generateUUID } from '@/utils/uuid'
+import ProjectHeader from './component/ProjectHeader.vue'
 // 信息提示
 const message = useMessage()
 // 获取dialog
@@ -206,11 +152,20 @@ const options = [
 ]
 /**
  * @Author roct
+ * @Description 隐藏创建项目的modal
+ * @Date 12:49 下午 2021/9/4
+ **/
+const hiddenCreateProject = () => {
+  console.log('?????')
+  showCreateProjectModal.value = false
+}
+/**
+ * @Author roct
  * @Description 创建新项目点击确定
  * @Date 12:11 上午 2021/9/4
  **/
 const newProjectClick = async () => {
-  showCreateProjectModal.value = false
+  hiddenCreateProject()
   newProject.value.id = generateUUID()
   projectList.value.push(newProject.value)
   console.log('projectList.value', projectList.value)
@@ -221,6 +176,7 @@ const newProjectClick = async () => {
   }
   await loadProjectDetail()
 }
+
 /***
  * @Author roct
  * @Description 点击创建新项目
@@ -294,11 +250,13 @@ const deleteProjectGroupClick = async (item: ProjectItemGroupType) => {
  * @Description 点击更新名字
  * @Date 10:11 下午 2021/9/3
  **/
-const changeGroupNameClick = async () => {
+const changeGroupNameClick = async (type: string) => {
   try {
     showModal.value = false
-    await updateProjectGroup(editGroup.value)
-    message.success('修改成功')
+    if (type === 'edit') {
+      await updateProjectGroup(editGroup.value)
+      message.success('修改成功')
+    }
     await loadProjectGroup()
   } catch (e) {
     message.error('修改失败')

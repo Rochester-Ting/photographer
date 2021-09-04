@@ -3,7 +3,7 @@
     <n-breadcrumb-item
       v-for="(item, index) of routeList"
       :key="index"
-      v-show="item.name !== 'Home'"
+      v-show="item.name !== 'Home' && item.name !== 'Project'"
     >
       {{ item.meta.name }}
     </n-breadcrumb-item>

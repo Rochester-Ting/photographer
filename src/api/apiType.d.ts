@@ -15,4 +15,15 @@ export type ProjectItemGroupType = {
 export interface ProjectItemType {
   id: string | number
   name: string
+  desc: string
+}
+/**
+ * @Author roct
+ * @Description 分镜头的侧边
+ * @Date 9:06 下午 2021/9/3
+ **/
+export interface ShootType {
+  id: string
+  name: string
+  projectId: string
 }
