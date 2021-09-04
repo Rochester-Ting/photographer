@@ -18,9 +18,11 @@
         <textarea v-else v-model="value" class="textarea" />
       </div>
     </div>
-    <n-button class="absolute right-10 top-4" @click="editProjectInfo">
-      {{ editStatus ? '保存' : '编辑' }}
-    </n-button>
+    <div class="absolute right-10 top-4">
+      <n-button @click="editProjectInfo">
+        {{ editStatus ? '保存' : '编辑' }}
+      </n-button>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>

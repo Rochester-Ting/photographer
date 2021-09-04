@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { resolve } = require('path')
 export default defineConfig({
+  base: '/p/',
   // 引入svg-icon
   plugins: [vue()],
   // 设置端口号

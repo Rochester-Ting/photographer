@@ -16,8 +16,8 @@
         src="@/assets/aside/icon.jpeg"
         alt=""
       />
-      <span class="text-gray-400 mt-2">Roman Kutepoy</span>
-      <span class="text-gray-300 mt-1">导演、制片人</span>
+      <span class="text-gray-400 mt-5">Roman Kutepoy</span>
+      <span class="text-gray-300 mt-1 mb-5" style="font-size: 14px">导演、制片人</span>
     </div>
     <n-menu
       @update:value="changeRouter"

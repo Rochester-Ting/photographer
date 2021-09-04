@@ -12,8 +12,10 @@
       "
     >
       <n-breadcrumb>
-        <n-breadcrumb-item> 所有项目 </n-breadcrumb-item>
-        <n-breadcrumb-item> {{ route.query.name }} </n-breadcrumb-item>
+        <n-breadcrumb-item @click="toGroupList"> 所有项目 </n-breadcrumb-item>
+        <n-breadcrumb-item @click="toProjectDetail">
+          {{ route.query.name }}
+        </n-breadcrumb-item>
         <n-breadcrumb-item> 分镜头列表 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
@@ -44,6 +46,14 @@ const loading = ref(false)
  **/
 const updateSelectedSL = (shoot: ShootType) => {
   console.log('shoot', shoot)
+}
+const toGroupList = () => {
+  router.push({
+    name: 'ProjectHome'
+  })
+}
+const toProjectDetail = () => {
+  router.go(-1)
 }
 </script>
 <style scoped lang="scss">
