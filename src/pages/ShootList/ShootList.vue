@@ -18,6 +18,10 @@
         </n-breadcrumb-item>
         <n-breadcrumb-item> 分镜头列表 </n-breadcrumb-item>
       </n-breadcrumb>
+      <n-space>
+        <n-button>打印预览</n-button>
+        <n-button>分享</n-button>
+      </n-space>
     </div>
     <div class="sl-content flex">
       <SLAside @updateSelectedSL="updateSelectedSL" />

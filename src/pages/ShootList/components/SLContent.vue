@@ -1,118 +1,192 @@
 <template>
-  <n-spin :show="loading">
-    <div class="p-10 pt-5 flex-auto">
-      <div class="text-3xl pb-5">{{ props.name }}</div>
-      <div>
-        <div class="flex items-center h-10 bg-gray-50 text-gray-500 text-sm">
-          <span class="w-20 pl-4">场次</span>
-          <span class="w-20 pl-4">镜号</span>
-          <span class="flex-auto pl-4">内容描述</span>
-          <span class="w-32 pl-4">景别</span>
-          <span class="w-32 pl-4">镜头类型</span>
-          <span class="w-40 pl-4">机位运动</span>
-          <span class="w-40 pl-4">备注</span>
-          <span class="w-32 pl-4">操作</span>
-        </div>
-        <div
-          class="flex items-center h-10 text-gray-500 text-sm text-gray-500"
-          v-for="(item, index) of data"
-          :key="index"
-        >
-          <span class="w-20 pl-4">{{ item.cc }}</span>
-          <span class="w-20 pl-4">{{ item.jh }}</span>
-          <span class="flex-auto pl-4">{{ item.nrms }}</span>
-          <span class="w-32 pl-4">{{ item.jb }}</span>
-          <span class="w-32 pl-4">{{ item.jtlx }}</span>
-          <span class="w-40 pl-4">{{ item.jwyd }}</span>
-          <span class="w-40 pl-4">{{ item.bz }}</span>
-          <span
-            class="w-32 pl-4 cursor-pointer underline text-red-700"
-            @click="deleteShootDetailClick(item)"
-          >
-            删除
-          </span>
-        </div>
-        <div class="flex items-center h-10 text-gray-500 text-sm text-gray-500">
-          <input
-            class="input w-20 h-10"
-            v-model="newData.cc"
-            type="text"
-            placeholder="场次"
-          />
-          <input
-            class="input w-20 h-10"
-            v-model="newData.jh"
-            type="text"
-            placeholder="镜号"
-          />
-          <input
-            class="input flex-auto"
-            v-model="newData.nrms"
-            type="text"
-            placeholder="请输入内容描述"
-          />
+  <div class="p-10 pt-5 flex-auto w-full">
+    <div class="text-3xl pb-5">{{ props.name }}</div>
+    <div>
+      <div class="flex items-center h-10 bg-gray-50 text-gray-500 text-sm">
+        <span class="w-20 pl-2">场次</span>
+        <span class="w-20 pl-2">镜号</span>
+        <span class="flex-auto pl-2">内容描述</span>
+        <span class="w-32 pl-4">景别</span>
+        <span class="w-32 pl-4">镜头类型</span>
+        <span class="w-40 pl-4">机位运动</span>
+        <span class="w-40 pl-2">备注</span>
+        <span class="w-32 pl-4">操作</span>
+      </div>
+      <div
+        class="
+          flex
+          items-center
+          w-full
+          h-10
+          text-gray-500 text-sm text-gray-500
+        "
+        v-for="(item, index) of data"
+        :key="index"
+      >
+        <input
+          class="input w-20 h-10"
+          v-model="item.cc"
+          type="text"
+          @blur="updateRequest"
+          placeholder="场次"
+        />
+        <input
+          class="input w-20 h-10"
+          v-model="item.jh"
+          type="text"
+          @blur="updateRequest"
+          placeholder="镜号"
+        />
+        <input
+          class="input flex-auto"
+          v-model="item.nrms"
+          type="text"
+          @blur="updateRequest"
+          placeholder="请输入内容描述"
+        />
 
-          <div class="w-32 pl-4">
-            <n-popselect
-              :options="jbOptions"
-              v-model:value="newData.jb"
-              trigger="click"
-              scrollable
-            >
-              <div class="flex items-center cursor-pointer">
-                {{ newData.jb || '景别' }}
-                <n-icon>
-                  <CaretDownSharp />
-                </n-icon>
-              </div>
-            </n-popselect>
-          </div>
-          <div class="w-32 pl-4">
-            <n-popselect
-              :options="jtOptions"
-              v-model:value="newData.jtlx"
-              trigger="click"
-              scrollable
-            >
-              <div class="flex items-center cursor-pointer">
-                {{ newData.jtlx || '镜头类型' }}
-                <n-icon>
-                  <CaretDownSharp />
-                </n-icon>
-              </div>
-            </n-popselect>
-          </div>
-          <div class="w-40 pl-4">
-            <n-popselect
-              :options="jwOptions"
-              v-model:value="newData.jwyd"
-              trigger="click"
-              scrollable
-            >
-              <div class="flex items-center cursor-pointer">
-                {{ newData.jwyd || '机位运动' }}
-                <n-icon>
-                  <CaretDownSharp />
-                </n-icon>
-              </div>
-            </n-popselect>
-          </div>
-          <input
-            class="input w-40"
-            v-model="newData.bz"
-            type="text"
-            placeholder="请输入内容描述"
-          />
-          <div
-            class="w-32 pl-4 cursor-pointer underline text-green-700"
-            @click="addNewShootDetailClick"
+        <div class="w-32 pl-4">
+          <n-popselect
+            :options="jbOptions"
+            v-model:value="item.jb"
+            @update:value="updateRequest"
+            trigger="click"
+            scrollable
           >
-            添加
-          </div>
+            <div class="flex items-center cursor-pointer">
+              {{ item.jb || '景别' }}
+              <n-icon>
+                <CaretDownSharp />
+              </n-icon>
+            </div>
+          </n-popselect>
+        </div>
+        <div class="w-32 pl-4">
+          <n-popselect
+            :options="jtOptions"
+            v-model:value="item.jtlx"
+            @update:value="updateRequest"
+            trigger="click"
+            scrollable
+          >
+            <div class="flex items-center cursor-pointer">
+              {{ item.jtlx || '镜头类型' }}
+              <n-icon>
+                <CaretDownSharp />
+              </n-icon>
+            </div>
+          </n-popselect>
+        </div>
+        <div class="w-40 pl-4">
+          <n-popselect
+            :options="jwOptions"
+            v-model:value="item.jwyd"
+            @update:value="updateRequest"
+            trigger="click"
+            scrollable
+          >
+            <div class="flex items-center cursor-pointer">
+              {{ item.jwyd || '机位运动' }}
+              <n-icon>
+                <CaretDownSharp />
+              </n-icon>
+            </div>
+          </n-popselect>
+        </div>
+        <input
+          class="input w-40"
+          v-model="item.bz"
+          type="text"
+          @blur="updateRequest"
+          placeholder="请输入内容描述"
+        />
+        <span
+          class="w-32 pl-4 cursor-pointer underline text-red-700"
+          @click="deleteShootDetailClick(item)"
+        >
+          删除
+        </span>
+      </div>
+      <div class="flex items-center h-10 text-gray-500 text-sm text-gray-500">
+        <input
+          class="input w-20 h-10"
+          v-model="newData.cc"
+          type="text"
+          placeholder="场次"
+        />
+        <input
+          class="input w-20 h-10"
+          v-model="newData.jh"
+          type="text"
+          placeholder="镜号"
+        />
+        <input
+          class="input flex-auto"
+          v-model="newData.nrms"
+          type="text"
+          placeholder="请输入内容描述"
+        />
+
+        <div class="w-32 pl-4">
+          <n-popselect
+            :options="jbOptions"
+            v-model:value="newData.jb"
+            trigger="click"
+            scrollable
+          >
+            <div class="flex items-center cursor-pointer">
+              {{ newData.jb || '景别' }}
+              <n-icon>
+                <CaretDownSharp />
+              </n-icon>
+            </div>
+          </n-popselect>
+        </div>
+        <div class="w-32 pl-4">
+          <n-popselect
+            :options="jtOptions"
+            v-model:value="newData.jtlx"
+            trigger="click"
+            scrollable
+          >
+            <div class="flex items-center cursor-pointer">
+              {{ newData.jtlx || '镜头类型' }}
+              <n-icon>
+                <CaretDownSharp />
+              </n-icon>
+            </div>
+          </n-popselect>
+        </div>
+        <div class="w-40 pl-4">
+          <n-popselect
+            :options="jwOptions"
+            v-model:value="newData.jwyd"
+            trigger="click"
+            scrollable
+          >
+            <div class="flex items-center cursor-pointer">
+              {{ newData.jwyd || '机位运动' }}
+              <n-icon>
+                <CaretDownSharp />
+              </n-icon>
+            </div>
+          </n-popselect>
+        </div>
+        <input
+          class="input w-40"
+          v-model="newData.bz"
+          type="text"
+          placeholder="请输入内容描述"
+        />
+        <div
+          class="w-32 pl-4 cursor-pointer underline text-green-700"
+          @click="addNewShootDetailClick"
+        >
+          添加
         </div>
       </div>
     </div>
-  </n-spin>
+  </div>
 </template>
 <script lang="ts" setup>
 /**
@@ -121,7 +195,14 @@
  * author: roct
  * date: 10:41 下午 2021/9/4
  */
-import { defineProps, ref, watch, Ref, watchEffect, onMounted } from 'vue'
+import {
+  defineProps,
+  ref,
+  watch,
+  Ref,
+  watchEffect,
+  nextTick
+} from 'vue'
 import { useMessage } from 'naive-ui'
 import { CaretDownSharp } from '@vicons/ionicons5'
 import {
@@ -157,12 +238,26 @@ const newData: Ref<ShootDetailType> = ref({
   bz: ''
 })
 watchEffect(() => {
-  console.log('Loading', props.shootId)
-  loadShootDetailList(props.shootId)
+  nextTick(() => {
+    loadShootDetailList(props.shootId)
+  })
 })
-onMounted(() => {
-  loadShootDetailList(props.shootId)
-})
+
+watch(
+  () => props.shootId,
+  () => {
+    loadShootDetailList(props.shootId)
+  }
+)
+
+const updateRequest = async () => {
+  try {
+    await updateShootDetail(data.value)
+    await getShootDetail(props.shootId)
+  } catch (e) {
+    message.error('保存失败')
+  }
+}
 /**
  * @Author roct
  * @Description 获取分镜头下的详细信息
