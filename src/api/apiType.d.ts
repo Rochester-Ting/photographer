@@ -43,3 +43,31 @@ export interface ShootDetailType {
   jwyd: string
   bz: string
 }
+
+/**
+ * @Author roct
+ * @Description 项目统筹列表的类型
+ * @Date 8:27 下午 2021/9/5
+ **/
+export interface PWType {
+  id: string
+  name: string
+  projectId: string
+}
+/**
+ * @Author roct
+ * @Description 项目统筹列表详情的类型
+ * @Date 8:27 下午 2021/9/5
+ **/
+export interface PWDetailType {
+  id: string
+  name: string
+  PWId: string
+  cj: {
+    cjlx: string
+    cjsj: string
+    cjcs: string
+    cjjs: string
+  }
+  dj: string[]
+}

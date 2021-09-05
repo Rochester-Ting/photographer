@@ -131,3 +131,14 @@ body {
   box-sizing: border-box;
 }
 
+.input {
+  outline: none;
+  background: transparent;
+  resize: none;
+  @apply p-2.5;
+  &:hover {
+    @apply border-gray-300;
+    @apply border;
+    @apply border-solid;
+  }
+}
