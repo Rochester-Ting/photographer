@@ -21,6 +21,7 @@
     </div>
     <div class="sl-content flex">
       <SLAside @updateSelectedSL="updateSelectedSL" />
+      <SLContent v-if="current.id" :shootId="current.id" :name="current.name" />
     </div>
   </n-spin>
 </template>
@@ -31,21 +32,28 @@
  * author: roct
  * date: 6:58 下午 2021/9/4
  */
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SLAside from './components/SLAside.vue'
+import SLContent from './components/SLContent.vue'
 import { ShootType } from '@/api/apiType'
 
 const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
+// 当前选中的分镜头
+const current: Ref<ShootType> = ref({
+  id: '',
+  name: '',
+  projectId: ''
+})
 /**
  * @Author roct
  * @Description 默认选中侧边栏
  * @Date 8:12 下午 2021/9/4
  **/
 const updateSelectedSL = (shoot: ShootType) => {
-  console.log('shoot', shoot)
+  current.value = shoot
 }
 const toGroupList = () => {
   router.push({

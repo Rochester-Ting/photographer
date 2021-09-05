@@ -43,8 +43,8 @@ const value = ref('')
 const nameRef = ref('')
 const emit = defineEmits(['update:desc', 'update:name', 'save'])
 watchEffect(() => {
-  value.value = props.desc
-  nameRef.value = props.name
+  value.value = props.desc || ''
+  nameRef.value = props.name || ''
 })
 watch(
   () => value.value,
