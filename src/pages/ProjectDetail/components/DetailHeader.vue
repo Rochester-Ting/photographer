@@ -2,7 +2,7 @@
   <div class="w-full h-56 bg-gray-100 rounded overflow-hidden flex relative">
     <n-image
       class="flex-shrink-0 h-56 flex-shrink-0"
-      src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+      src="../../../src/assets/cover.jpg"
     />
     <div class="ml-10">
       <div v-if="!editStatus" class="pt-4 text-3xl text-gray-700">

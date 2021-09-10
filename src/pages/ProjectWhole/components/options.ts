@@ -20,5 +20,5 @@ export const sjOptions = [
   {
     label: '夜景',
     value: '夜景'
-  },
+  }
 ]

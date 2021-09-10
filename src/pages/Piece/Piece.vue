@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-        class="
+      class="
         w-full
         h-16
         border-b border-solid border-gray-100
@@ -15,10 +15,7 @@
         <n-breadcrumb-item> 在线审片 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
-    <div class="p-5">
-      Piece
-    </div>
-
+    <div class="p-5">Piece</div>
   </div>
 </template>
 <script lang="ts" setup>

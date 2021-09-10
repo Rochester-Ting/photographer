@@ -71,3 +71,9 @@ export interface PWDetailType {
   }
   dj: string[]
 }
+
+export interface TGType {
+  id: string
+  name: string
+  projectId: string
+}

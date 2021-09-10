@@ -19,13 +19,17 @@
         <n-breadcrumb-item> 项目统筹 </n-breadcrumb-item>
       </n-breadcrumb>
       <n-space>
-        <n-button>打印预览</n-button>
-        <n-button>分享</n-button>
+        <n-button type="primary">打印预览</n-button>
+        <n-button type="primary">分享</n-button>
       </n-space>
     </div>
     <div class="sl-content flex">
-      <WholeAside @updateSelectedPW="updateSelectedPW" />
-      <WholeContent :PWId="current.id" :name="current.name" />
+      <WholeAside @hidden="hidden" @updateSelectedPW="updateSelectedPW" />
+      <WholeContent
+        v-if="showContent"
+        :PWId="current.id"
+        :name="current.name"
+      />
     </div>
   </n-spin>
 </template>
@@ -44,10 +48,11 @@ import { PWType } from '@/api/apiType'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
+const showContent = ref(true)
 const current: Ref<PWType> = ref({
   id: '',
   name: '',
-  PWId: ''
+  projectId: ''
 })
 const updateSelectedPW = (item: PWType) => {
   current.value = item
@@ -56,6 +61,9 @@ const toGroupList = () => {
   router.push({
     name: 'ProjectHome'
   })
+}
+const hidden = (hidden: boolean) => {
+  showContent.value = hidden
 }
 const toProjectDetail = () => {
   router.go(-1)

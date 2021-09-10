@@ -15,9 +15,7 @@
         <n-breadcrumb-item> 设置 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
-    <div class="p-5">
-      Setting
-    </div>
+    <div class="p-5">Setting</div>
   </div>
 </template>
 <script lang="ts" setup>

@@ -1,4 +1,4 @@
-import { PWType } from '@/api/apiType'
+import { TGType } from '@/api/apiType'
 
 /**
  * @Author roct
@@ -6,11 +6,11 @@ import { PWType } from '@/api/apiType'
  * @Date 10:33 下午 2021/9/4
  **/
 const getOtherList = (projectId: string) => {
-  const allList = localStorage.getItem('PWList')
+  const allList = localStorage.getItem('TGList')
   if (allList) {
     const listArr = JSON.parse(allList)
     return (
-      listArr.filter((target: PWType) => {
+      listArr.filter((target: TGType) => {
         return target.projectId !== projectId
       }) || []
     )
@@ -22,11 +22,11 @@ const getOtherList = (projectId: string) => {
  * @Description 获取分镜头列表
  * @Date 1:47 下午 2021/9/4
  **/
-export const getPWList = (projectId: string) => {
-  const list = localStorage.getItem('PWList')
+export const getTGList = (projectId: string) => {
+  const list = localStorage.getItem('TGList')
   if (list) {
     const listArr = JSON.parse(list)
-    const idList = listArr.filter((target: PWType) => {
+    const idList = listArr.filter((target: TGType) => {
       return target.projectId === projectId
     })
     if (idList) {
@@ -40,11 +40,11 @@ export const getPWList = (projectId: string) => {
  * @Description 保存分镜头列表
  * @Date 1:47 下午 2021/9/4
  **/
-export const updatePWList = async (item: PWType) => {
+export const updateTGList = async (item: TGType) => {
   if (item.id && item.projectId) {
-    const list: PWType[] = await getPWList(item.projectId)
+    const list: TGType[] = await getTGList(item.projectId)
     const index = list.findIndex(
-      (target: PWType) =>
+      (target: TGType) =>
         item.id === target.id && target.projectId === item.projectId
     )
     if (index === -1) {
@@ -53,7 +53,7 @@ export const updatePWList = async (item: PWType) => {
       list[index] = item
     }
     const otherList = getOtherList(item.projectId)
-    localStorage.setItem('PWList', JSON.stringify(otherList.concat(list)))
+    localStorage.setItem('TGList', JSON.stringify(otherList.concat(list)))
     return Promise.resolve()
   } else {
     return Promise.reject()
@@ -64,9 +64,9 @@ export const updatePWList = async (item: PWType) => {
  * @Description 保存分镜头列表, 保存整个列表
  * @Date 1:47 下午 2021/9/4
  **/
-export const updateSorted = async (items: PWType[], projectId: string) => {
+export const updateSorted = async (items: TGType[], projectId: string) => {
   const otherList = getOtherList(projectId)
-  localStorage.setItem('PWList', JSON.stringify(otherList.concat(items)))
+  localStorage.setItem('TGList', JSON.stringify(otherList.concat(items)))
   return Promise.resolve()
 }
 /**
@@ -74,14 +74,14 @@ export const updateSorted = async (items: PWType[], projectId: string) => {
  * @Description 删除分镜头列表
  * @Date 1:47 下午 2021/9/4
  **/
-export const deletePWList = async (item: PWType) => {
+export const deleteTGList = async (item: TGType) => {
   if (item.id && item.projectId) {
-    const list = await getPWList(item.projectId)
-    const index = list.findIndex((target: PWType) => item.id === target.id)
+    const list = await getTGList(item.projectId)
+    const index = list.findIndex((target: TGType) => item.id === target.id)
     if (index > -1) {
       list.splice(index, 1)
       const otherList = getOtherList(item.projectId)
-      localStorage.setItem('PWList', JSON.stringify(otherList.concat(list)))
+      localStorage.setItem('TGList', JSON.stringify(otherList.concat(list)))
       return Promise.resolve()
     } else {
       return Promise.reject()

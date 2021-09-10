@@ -9,24 +9,24 @@
       flex-shrink-0
     "
   >
-    <div class="mt-4">表单管理</div>
-    <VueDraggableNext v-model="PWList" @change="draggableEnd">
+    <div class="mt-4">通告管理</div>
+    <VueDraggableNext v-model="TGList" @change="draggableEnd">
       <transition-group>
         <div
-          class="PW-aside-item"
-          v-for="(item, index) of PWList"
+          class="TG-aside-item"
+          v-for="(item, index) of TGList"
           :key="index"
           :class="item.id === current.id ? 'active' : ''"
           @click="selectedItemClick(item)"
         >
-          {{ item.name || '新建表单' + (index + 1) }}
+          {{ item.name || '新建通告' + (index + 1) }}
           <n-dropdown
             trigger="click"
             @select="handleSelect"
             :options="options"
             :show-arrow="true"
           >
-            <n-icon class="PW-aside-item-icon">
+            <n-icon class="TG-aside-item-icon">
               <EllipsisHorizontalSharp />
             </n-icon>
           </n-dropdown>
@@ -34,30 +34,30 @@
       </transition-group>
     </VueDraggableNext>
 
-    <n-button class="mt-4 w-56" @click="addNewPWClick">
+    <n-button class="mt-4 w-56" @click="addNewTGClick">
       <template #icon>
         <n-icon>
           <add-icon />
         </n-icon>
       </template>
-      新建表单
+      新建通告
     </n-button>
     <ProjectEditModal
       v-if="showModal"
       :showModal="showModal"
       v-model:inputVal="current.name"
       placeholder="请输入新的名字"
-      @cancelClick="changePWNameClick('cancel')"
-      @confirmClick="changePWNameClick('edit')"
+      @cancelClick="changeTGNameClick('cancel')"
+      @confirmClick="changeTGNameClick('edit')"
     />
   </div>
 </template>
 <script lang="ts" setup>
 /**
- * name: WholeAside
+ * name: Aside
  * description:
  * author: roct
- * date: 8:25 下午 2021/9/5
+ * date: 10:04 下午 2021/9/10
  */
 import {
   EllipsisHorizontalSharp,
@@ -68,21 +68,21 @@ import ProjectEditModal from '@/Pages/Project/component/ProjectEditModal.vue'
 import { onMounted, Ref, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  getPWList,
-  updatePWList,
+  getTGList,
+  updateTGList,
   updateSorted,
-  deletePWList
-} from '@/api/PWApit'
-import { PWType } from '@/api/apiType'
+  deleteTGList
+} from '@/api/takeNoticedApi'
+import { TGType } from '@/api/apiType'
 import { generateUUID } from '@/utils/uuid'
 import { useMessage, useDialog } from 'naive-ui'
-const PWList: Ref<PWType[]> = ref([])
-const emit = defineEmits(['updateSelectedPW', 'hidden'])
+const TGList: Ref<TGType[]> = ref([])
+const emit = defineEmits(['updateSelectedTG', 'hidden'])
 const message = useMessage()
 const route = useRoute()
 const dialog = useDialog()
 const showModal = ref(false)
-const current: Ref<PWType> = ref({
+const current: Ref<TGType> = ref({
   id: '',
   name: '',
   projectId: ''
@@ -102,28 +102,28 @@ const options = [
  * @Description 修改分镜头名称
  * @Date 10:24 下午 2021/9/4
  **/
-const changePWNameClick = async (type: string) => {
+const changeTGNameClick = async (type: string) => {
   showModal.value = false
   if (type === 'edit') {
-    await updatePWList(current.value)
+    await updateTGList(current.value)
   }
-  await loadPWList()
+  await loadTGList()
 }
 /**
  * @Author roct
  * @Description 点击创建新的分镜头
  * @Date 7:21 下午 2021/9/4
  **/
-const addNewPWClick = async () => {
-  const PW = {
+const addNewTGClick = async () => {
+  const TG = {
     id: generateUUID(),
     projectId: route.query.id + '',
-    name: '第' + (PWList.value.length + 1) + '场'
+    name: '第' + (TGList.value.length + 1) + '场'
   }
   try {
-    await updatePWList(PW)
+    await updateTGList(TG)
     message.success('保存成功')
-    await loadPWList()
+    await loadTGList()
   } catch (e) {
     message.error('保存失败')
   }
@@ -135,8 +135,8 @@ const addNewPWClick = async () => {
  **/
 const draggableEnd = async () => {
   try {
-    await updateSorted(PWList.value, route.query.id + '')
-    await loadPWList()
+    await updateSorted(TGList.value, route.query.id + '')
+    await loadTGList()
   } catch (e) {
     message.error('调整顺序失败')
   }
@@ -146,20 +146,20 @@ const draggableEnd = async () => {
  * @Description 点击某个分镜头
  * @Date 9:11 下午 2021/9/3
  **/
-const selectedItemClick = (item: PWType) => {
+const selectedItemClick = (item: TGType) => {
   current.value = item
-  emit('updateSelectedPW', item)
+  emit('updateSelectedTG', item)
 }
 /**
  * @Author roct
  * @Description 删除某个分镜头
  * @Date 10:21 下午 2021/9/4
  **/
-const deletePWRequest = async (item: PWType) => {
+const deleteTGRequest = async (item: TGType) => {
   try {
-    await deletePWList(item)
+    await deleteTGList(item)
     message.success('删除成功')
-    await loadPWList()
+    await loadTGList()
   } catch (e) {
     message.error('删除失败')
   }
@@ -181,7 +181,7 @@ const handleSelect = async (key: string) => {
       showIcon: false,
       negativeText: '取消',
       onPositiveClick: () => {
-        deletePWRequest(current.value)
+        deleteTGRequest(current.value)
       }
     })
   }
@@ -191,11 +191,11 @@ const handleSelect = async (key: string) => {
  * @Description 加载分镜头列表
  * @Date 7:41 下午 2021/9/4
  **/
-const loadPWList = async () => {
+const loadTGList = async () => {
   try {
-    PWList.value = await getPWList(route.query.id + '')
-    if (PWList.value.length > 0) {
-      selectedItemClick(PWList.value[0])
+    TGList.value = await getTGList(route.query.id + '')
+    if (TGList.value.length > 0) {
+      selectedItemClick(TGList.value[0])
       emit('hidden', true)
     } else {
       emit('hidden', false)
@@ -205,11 +205,11 @@ const loadPWList = async () => {
   }
 }
 onMounted(() => {
-  loadPWList()
+  loadTGList()
 })
 </script>
 <style scoped lang="scss">
-.PW-aside-item {
+.TG-aside-item {
   @apply flex;
   @apply items-center;
   @apply justify-between;
@@ -222,18 +222,18 @@ onMounted(() => {
   @apply mt-3;
   @apply text-gray-500;
   @apply w-56;
-  .PW-aside-item-icon {
+  .TG-aside-item-icon {
     display: none;
   }
   &:hover {
-    .PW-aside-item-icon {
+    .TG-aside-item-icon {
       display: block;
     }
   }
   &.active {
     @apply bg-white;
     @apply text-black;
-    .PW-aside-item-icon {
+    .TG-aside-item-icon {
       display: block;
     }
   }

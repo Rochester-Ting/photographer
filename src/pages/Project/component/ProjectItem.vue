@@ -16,7 +16,7 @@
       @click="toDetail"
       class="flex-shrink-0"
       width="150"
-      src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+      src="../../../src/assets/cover.jpg"
     />
     <div class="flex-auto">
       <div class="p-3 underline flex items-center flex justify-between">
