@@ -42,6 +42,9 @@ export interface ShootDetailType {
   jtlx: string
   jwyd: string
   bz: string
+  jtgd: string
+  hmgt: string
+  dsqx: string
 }
 
 /**
