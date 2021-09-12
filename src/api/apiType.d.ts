@@ -103,3 +103,12 @@ export interface TGDetailType {
   pssx: PssxType[]
   yzry: YzryType[]
 }
+
+// 单个员工的信息
+export interface User {
+  key: string | number
+  name: string
+  age: string | number
+  address: string
+  tags: string[] | string
+}

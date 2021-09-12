@@ -18,12 +18,10 @@ const themeOverrides: GlobalThemeOverrides = {
     primaryColorHover: '#666666',
     primaryColor: '#000000',
     primaryColorPressed: '#000000',
-    primaryColorSuppl: '#000000',
-    borderColor: 'transparent',
+    primaryColorSuppl: '#000000'
   },
   TimePicker: {
     borderColor: 'transparent'
   }
-
 }
 </script>
