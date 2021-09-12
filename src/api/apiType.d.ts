@@ -77,3 +77,29 @@ export interface TGType {
   name: string
   projectId: string
 }
+// 拍摄顺序
+export interface PssxType {
+  nwj: string
+  ryj: string
+  description: string
+  remark: string
+  yghs: string
+}
+// 演职人员
+export interface YzryType {
+  name: string
+  zw: string
+  dcsj: number
+  nrms: string
+  remark: string
+}
+// 通告详情
+export interface TGDetailType {
+  title: string // 标题
+  time: string | number // 拍摄时间
+  address: string // 拍摄地址
+  remark?: string // 备注
+  description: string // 内容描述
+  pssx: PssxType[]
+  yzry: YzryType[]
+}

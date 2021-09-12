@@ -15,7 +15,9 @@
         <n-breadcrumb-item> 在线审片 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
-    <div class="p-5">Piece</div>
+    <div class="sl-content flex">
+
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -26,4 +28,8 @@
  * date: 9:49 下午 2021/8/31
  */
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.sl-content {
+  height: calc(100vh - 64px);
+}
+</style>

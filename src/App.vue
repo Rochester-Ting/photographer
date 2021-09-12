@@ -1,5 +1,9 @@
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+    :themeOverrides="themeOverrides"
+  >
     <n-message-provider>
       <n-dialog-provider>
         <router-view />
@@ -8,12 +12,18 @@
   </n-config-provider>
 </template>
 <script setup lang="ts">
-const themeOverrides = {
+import { zhCN, dateZhCN, GlobalThemeOverrides } from 'naive-ui'
+const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColorHover: '#000000',
+    primaryColorHover: '#666666',
     primaryColor: '#000000',
     primaryColorPressed: '#000000',
-    primaryColorSuppl: '#000000'
+    primaryColorSuppl: '#000000',
+    borderColor: 'transparent',
+  },
+  TimePicker: {
+    borderColor: 'transparent'
   }
+
 }
 </script>
