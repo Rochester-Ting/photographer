@@ -58,35 +58,28 @@
         />
       </div>
     </div>
-    <n-divider />
-    <div class="text-3xl pb-5">道具</div>
-    <div class="flex flex-wrap">
-      <div
-        class="
-          w-32
-          h-32
-          flex
-          items-center
-          justify-center
-          border border-solid border-gray-100
-          mr-5
-          rounded
-          mb-5
-          relative
-          dj-item
-        "
-        v-for="(item, index) of PWInfo.dj"
-        :key="index"
-      >
-        <n-icon
-          class="dj-icon absolute top-2 right-2"
-          @click.stop="deleteDj(item)"
-        >
-          <CloseOutline />
-        </n-icon>
-        {{ item }}
+    <div v-for="(item, index) of PWInfo.dj" :key="index">
+      <n-divider v-if="item.name" />
+      <div class="text-3xl pb-5" v-if="item.name">道具</div>
+      <div class="flex items-center flex-wrap" v-if="item.name">
+        <n-input
+          class="w-40 mr-4"
+          style="margin-right: 8px; width: 100px"
+          v-for="(label, idx) of item.list"
+          :value="label"
+          @update:value="(value) => updateLabel(value, item, idx)"
+          :key="idx"
+          placeholder="请输入"
+          @blur="updateRequest"
+        />
+        <n-button class="ml-4" @click.stop="addNewLabels(item)">
+          <n-icon>
+            <Add />
+          </n-icon>
+        </n-button>
       </div>
     </div>
+
     <n-divider />
     <n-dropdown
       trigger="hover"
@@ -94,7 +87,7 @@
       :options="options"
       style="max-height: 300px; overflow: auto"
     >
-      <n-button>点击选择道具</n-button>
+      <n-button>点击选择元素</n-button>
     </n-dropdown>
   </div>
 </template>
@@ -105,19 +98,11 @@
  * author: roct
  * date: 8:35 下午 2021/9/5
  */
-import {
-  ref,
-  Ref,
-  watch,
-  watchEffect,
-  defineEmits,
-  defineProps,
-  nextTick
-} from 'vue'
-import { CaretDownSharp, CloseOutline } from '@vicons/ionicons5'
+import { ref, Ref, watch, watchEffect, defineProps, nextTick } from 'vue'
+import { CaretDownSharp, CloseOutline, Add } from '@vicons/ionicons5'
 import { getPWDetailInfo, savePWDetail } from '@/api/PWDetailApi'
 import { PWDetailType } from '@/api/apiType'
-import { lxOptions, sjOptions } from './options'
+import { lxOptions, sjOptions, options } from './options'
 import { generateUUID } from '@/utils/uuid'
 import { useMessage } from 'naive-ui'
 
@@ -139,72 +124,7 @@ const PWInfo: Ref<PWDetailType> = ref({
   },
   dj: []
 })
-const options = [
-  {
-    label: '演员',
-    key: '演员'
-  },
-  {
-    label: '群演',
-    key: '群演'
-  },
-  {
-    label: '打斗/特技',
-    key: '打斗/特技'
-  },
-  {
-    label: '车辆',
-    key: '车辆'
-  },
-  {
-    label: '道具',
-    key: '道具'
-  },
-  {
-    label: '后期特效',
-    key: '后期特效'
-  },
-  {
-    label: '化妆/发型',
-    key: '化妆/发型'
-  },
-  {
-    label: '动物',
-    key: '动物'
-  },
-  {
-    label: '配乐',
-    key: '配乐'
-  },
-  {
-    label: '录音',
-    key: '录音'
-  },
-  {
-    label: '布景',
-    key: '布景'
-  },
-  {
-    label: '特殊设备',
-    key: '特殊设备'
-  },
-  {
-    label: '安保',
-    key: '安保'
-  },
-  {
-    label: '额外劳力',
-    key: '额外劳力'
-  },
-  {
-    label: '视觉效果',
-    key: '视觉效果'
-  },
-  {
-    label: '杂项',
-    key: '杂项'
-  }
-]
+
 watch(
   () => props.PWId,
   () => {
@@ -234,19 +154,28 @@ const updateRequest = async () => {
 }
 
 const handleSelect = async (key: string) => {
-  if (PWInfo.value.dj.indexOf(key) > -1) {
+  const idx = PWInfo.value.dj.findIndex((item: any) => {
+    return item.name === key
+  })
+  if (idx > -1) {
     message.error('无法重复添加')
     return
   }
-  PWInfo.value.dj.push(key)
-  await savePWDetail(PWInfo.value)
+  PWInfo.value.dj.push({
+    name: key,
+    list: []
+  })
+  console.log('PWInfo.value.dj', PWInfo.value.dj)
+  await updateRequest()
 }
-const deleteDj = async (key: string) => {
-  const index = PWInfo.value.dj.indexOf(key)
-  if (index !== -1) {
-    PWInfo.value.dj.splice(index, 1)
-    await savePWDetail(PWInfo.value)
-  }
+
+const addNewLabels = async (item: any) => {
+  item.list.push('')
+  await updateRequest()
+}
+const updateLabel = async (value: string, item: any, idx: number) => {
+  item.list[idx] = value
+  await updateRequest()
 }
 </script>
 <style scoped lang="scss">

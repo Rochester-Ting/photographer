@@ -72,7 +72,23 @@ export interface PWDetailType {
     cjcs: string
     cjjs: string
   }
-  dj: string[]
+  dj: { name: string; list: string[] }[]
+  // yy?: string[]
+  // qy?: string[]
+  // dd?: string[]
+  // cl?: string[]
+  // dj?: string[]
+  // hqtx?: string[]
+  // hz?: string[]
+  // dw?: string[]
+  // py?: string[]
+  // ly?: string[]
+  // bj?: string[]
+  // tssb?: string[]
+  // ab?: string[]
+  // ewll?: string[]
+  // sjxg?: string[]
+  // zx?: string[]
 }
 
 export interface TGType {
@@ -92,7 +108,7 @@ export interface PssxType {
 export interface YzryType {
   name: string
   zw: string
-  dcsj: number
+  dcsj: number | null
   nrms: string
   remark: string
 }

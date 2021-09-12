@@ -137,6 +137,13 @@
                       </n-space>
                     </n-radio-group>
                   </div>
+                  <div class="w-1/2 h-1/2" style="position: relative">
+                    <n-button
+                      class="absolute bottom-2 left-2"
+                      @click="resetJt(item)"
+                      >重置</n-button
+                    >
+                  </div>
                 </div>
               </n-popover>
             </div>
@@ -214,8 +221,8 @@
               <div class="flex items-center cursor-pointer">
                 {{
                   !newData.jtgd && !newData.hmgt && !newData.dsqx
-                      ? '镜头类型'
-                      : (newData.jtgd ? newData.jtgd : '') +
+                    ? '镜头类型'
+                    : (newData.jtgd ? newData.jtgd : '') +
                       '/' +
                       (newData.dsqx ? newData.dsqx : '') +
                       '/' +
@@ -268,6 +275,13 @@
                     </n-radio>
                   </n-space>
                 </n-radio-group>
+              </div>
+              <div class="w-1/2 h-1/2" style="position: relative">
+                <n-button
+                  class="absolute bottom-2 left-2"
+                  @click="resetJt(newData)"
+                  >重置</n-button
+                >
               </div>
             </div>
           </n-popover>
@@ -438,6 +452,12 @@ const deleteShootDetailClick = async (item: ShootDetailType) => {
   } catch (e) {
     message.error('删除失败')
   }
+}
+const resetJt = (item: ShootDetailType) => {
+  item.hmgt = ''
+  item.dsqx = ''
+  item.jtgd = ''
+  updateRequest()
 }
 const draggableEnd = () => {
   updateRequest()

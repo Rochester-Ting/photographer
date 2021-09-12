@@ -23,6 +23,7 @@
       <n-divider class="w-custom" />
       <n-input
         size="medium"
+        style="width: 680px"
         class="w-custom mt-5"
         type="text"
         placeholder="输入标题"
@@ -36,10 +37,11 @@
       </div>
       <n-date-picker
         size="medium"
+        style="width: 680px"
         class="w-custom"
         placeholder="拍摄时间"
         v-model:value="detail.time"
-        type="date"
+        type="datetime"
         clearable
         @blur="saveDetail"
       />
@@ -51,6 +53,7 @@
       </div>
       <n-input
         size="medium"
+        style="width: 680px"
         class="w-custom"
         type="text"
         placeholder="输入地址"
@@ -58,6 +61,7 @@
         @blur="saveDetail"
       />
       <n-input
+        style="width: 680px"
         size="medium"
         class="w-custom mt-5"
         type="text"
@@ -66,6 +70,7 @@
         @blur="saveDetail"
       />
       <n-input
+        style="width: 680px"
         size="medium"
         class="w-custom mt-5"
         type="text"
@@ -267,8 +272,7 @@
           <span class="w-20">姓名</span>
           <span class="w-28"> 职务 </span>
           <span class="w-28"> 到场时间 </span>
-          <span class="flex-auto">内容简述</span>
-          <span class="w-20">备注</span>
+          <span class="flex-auto">备注</span>
           <span class="w-20">操作</span>
         </div>
         <div
@@ -303,12 +307,6 @@
           <input
             class="hidden-input flex-auto"
             v-model="item.nrms"
-            placeholder="内容简述"
-            @blur="saveDetail"
-          />
-          <input
-            class="hidden-input w-20"
-            v-model="item.remark"
             placeholder="备注"
             @blur="saveDetail"
           />
@@ -348,11 +346,6 @@
           <input
             class="hidden-input flex-auto"
             v-model="yzry.nrms"
-            placeholder="内容简述"
-          />
-          <input
-            class="hidden-input w-20"
-            v-model="yzry.remark"
             placeholder="备注"
           />
           <span
@@ -378,7 +371,16 @@ import {
   LocationOutline,
   CaretDownSharp
 } from '@vicons/ionicons5'
-import { computed, defineProps, onMounted, reactive, ref, Ref } from 'vue'
+import {
+  computed,
+  defineProps,
+  onMounted,
+  reactive,
+  ref,
+  Ref,
+  watch,
+  watchEffect
+} from 'vue'
 import { useMessage } from 'naive-ui'
 import { saveTGDetail, getTGDetail } from '@/api/takeNoticedDetailApi'
 import { PssxType, YzryType, TGDetailType } from '@/api/apiType'
@@ -436,6 +438,16 @@ const options1 = [
     value: '夜景'
   }
 ]
+watch(
+  () => props.id,
+  () => {
+    console.log('============', props.id)
+    getDetail()
+  }
+)
+// watchEffect(() => {
+//   getDetail()
+// })
 const calHour = computed(() => {
   let hour = 0
   for (const item of detail.pssx) {
@@ -499,27 +511,34 @@ const pssxAddClick = async () => {
   await saveDetail()
 }
 const getDetail = async () => {
-  const id = route.query.id + ''
-  const res = await getTGDetail(id)
-  if (res) {
-    detail.title = res.title || ''
-    detail.time = res.time || null
-    detail.address = res.address || ''
-    detail.description = res.description || ''
-    detail.remark = res.remark || ''
-    detail.pssx = res.pssx || ''
-    detail.yzry = res.yzry || ''
-    for (const item of detail.yzry) {
-      item.dcsj = Number(item.dcsj)
-    }
-    console.log('res', res)
-    console.log('detail', detail)
+  const res = await getTGDetail(props.id)
+  // if (res) {
+  detail.title = res && res.title ? res.title : ''
+  detail.time = res && res.time ? res.time : null
+  detail.address = res && res.address ? res.address : ''
+  detail.description = res && res.description ? res.description : ''
+  detail.remark = res && res.remark ? res.remark : ''
+  detail.pssx = res && res.pssx ? res.pssx : []
+  detail.yzry = res && res.yzry ? res.yzry : []
+  for (const item of detail.yzry) {
+    item.dcsj = Number((item && item.dcsj) || 0)
   }
+  // } else {
+  //   detail.title = res.title || ''
+  //   detail.time = res.time || null
+  //   detail.address = res.address || ''
+  //   detail.description = res.description || ''
+  //   detail.remark = res.remark || ''
+  //   detail.pssx = res.pssx || ''
+  //   detail.yzry = res.yzry || ''
+  //   for (const item of detail.yzry) {
+  //     item.dcsj = Number(item.dcsj)
+  //   }
+  // }
 }
 
 const saveDetail = async () => {
-  const id = route.query.id + ''
-  await saveTGDetail(id, detail)
+  await saveTGDetail(props.id, detail)
 }
 
 onMounted(() => {

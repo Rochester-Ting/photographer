@@ -25,7 +25,7 @@
     </div>
     <div class="sl-content flex">
       <Aside @updateSelectedTG="updateSelectedTG" />
-      <Content :id="current.id" :name="current.name" />
+      <Content :id="current.id" :name="current.name" v-if="current.id" />
     </div>
   </n-spin>
 </template>
