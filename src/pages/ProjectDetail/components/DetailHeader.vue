@@ -2,7 +2,7 @@
   <div class="w-full h-56 bg-gray-100 rounded overflow-hidden flex relative">
     <n-image
       class="flex-shrink-0 h-56 flex-shrink-0"
-      src="../../../src/assets/cover.jpg"
+      :src="cover"
     />
     <div class="ml-10">
       <div v-if="!editStatus" class="pt-4 text-3xl text-gray-700">
@@ -33,6 +33,7 @@
  * date: 1:11 下午 2021/9/4
  */
 import { ref, watch, watchEffect, defineProps, defineEmits } from 'vue'
+import cover from '@/assets/cover.jpg'
 interface Props {
   id: string
   name?: string

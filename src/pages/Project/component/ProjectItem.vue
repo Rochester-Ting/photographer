@@ -16,7 +16,7 @@
       @click="toDetail"
       class="flex-shrink-0"
       width="150"
-      src="../../../src/assets/cover.jpg"
+      :src="cover"
     />
     <div class="flex-auto">
       <div class="p-3 underline flex items-center flex justify-between">
@@ -63,6 +63,7 @@ import {
   withDefaults
 } from 'vue' // 信息提示
 import { useRouter } from 'vue-router'
+import cover from '@/assets/cover.jpg'
 
 interface ProjectItemType {
   id: string
