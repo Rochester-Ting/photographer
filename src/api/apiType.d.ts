@@ -15,7 +15,7 @@ export type ProjectItemGroupType = {
 export interface ProjectItemType {
   id: string | number
   name: string
-  desc: string
+  desc?: string
 }
 /**
  * @Author roct

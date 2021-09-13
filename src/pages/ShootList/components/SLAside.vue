@@ -76,7 +76,7 @@ import {
 import { ShootType } from '@/api/apiType'
 import { generateUUID } from '@/utils/uuid'
 import { useMessage, useDialog } from 'naive-ui'
-const slList: Ref<ShootType> = ref([])
+const slList: Ref<ShootType[]> = ref([])
 const emit = defineEmits(['updateSelectedSL'])
 const message = useMessage()
 const route = useRoute()
@@ -118,7 +118,7 @@ const addNewSLClick = async () => {
   const shoot = {
     id: generateUUID(),
     projectId: route.query.id + '',
-    name: '第' + (slList.value.length + 1) + '场'
+    name: '第' + (slList.value.length + 1) + '场' + generateUUID().substr(Math.floor(Math.random()*10+1), 2)
   }
   try {
     await updateShootList(shoot)

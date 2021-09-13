@@ -118,7 +118,11 @@ const addNewPWClick = async () => {
   const PW = {
     id: generateUUID(),
     projectId: route.query.id + '',
-    name: '第' + (PWList.value.length + 1) + '场'
+    name:
+      '第' +
+      (PWList.value.length + 1) +
+      '场' +
+      generateUUID().substr(Math.floor(Math.random() * 10 + 1), 2)
   }
   try {
     await updatePWList(PW)

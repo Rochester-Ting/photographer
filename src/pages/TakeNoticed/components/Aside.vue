@@ -118,7 +118,11 @@ const addNewTGClick = async () => {
   const TG = {
     id: generateUUID(),
     projectId: route.query.id + '',
-    name: '第' + (TGList.value.length + 1) + '场'
+    name:
+      '第' +
+      (TGList.value.length + 1) +
+      '场' +
+      generateUUID().substr(Math.floor(Math.random() * 10 + 1), 2)
   }
   try {
     await updateTGList(TG)

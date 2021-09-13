@@ -15,7 +15,9 @@
         <n-breadcrumb-item> 日程安排 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
-    <div class="p-5">Schedule</div>
+    <div class="sl-content flex p-5">
+      <div class="bg w-full h-full"></div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -26,4 +28,14 @@
  * date: 9:49 下午 2021/8/31
  */
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.sl-content {
+  height: calc(100vh - 64px);
+  .bg {
+    background-image: url('../../assets/rcap.png');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100%;
+  }
+}
+</style>

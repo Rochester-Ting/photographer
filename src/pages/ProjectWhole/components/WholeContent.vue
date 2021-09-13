@@ -60,7 +60,7 @@
     </div>
     <div v-for="(item, index) of PWInfo.dj" :key="index">
       <n-divider v-if="item.name" />
-      <div class="text-3xl pb-5" v-if="item.name">道具</div>
+      <div class="text-3xl pb-5" v-if="item.name">{{ item.name }}</div>
       <div class="flex items-center flex-wrap" v-if="item.name">
         <n-input
           class="w-40 mr-4"

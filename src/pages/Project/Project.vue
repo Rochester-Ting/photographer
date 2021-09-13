@@ -16,25 +16,29 @@
         "
       >
         <div class="mt-4">项目组管理</div>
-        <div
-          class="project-aside-item"
-          v-for="(item, index) of projectGroupList"
-          :key="index"
-          :class="item.id === current.id ? 'active' : ''"
-          @click="selectedItemClick(item)"
-        >
-          {{ item.name || '新建项目组' + (index + 1) }}
-          <n-dropdown
-            trigger="click"
-            @select="(key) => handleSelect(key, item)"
-            :options="options"
-            :show-arrow="true"
-          >
-            <n-icon class="project-aside-item-icon">
-              <EllipsisHorizontalSharp />
-            </n-icon>
-          </n-dropdown>
-        </div>
+        <VueDraggableNext v-model="projectGroupList" @change="draggableEnd">
+          <transition-group>
+            <div
+              class="project-aside-item"
+              v-for="(item, index) of projectGroupList"
+              :key="index"
+              :class="item.id === current.id ? 'active' : ''"
+              @click="selectedItemClick(item)"
+            >
+              {{ item.name || '新建项目组' + (index + 1) }}
+              <n-dropdown
+                trigger="click"
+                @select="(key) => handleSelect(key, item)"
+                :options="options"
+                :show-arrow="true"
+              >
+                <n-icon class="project-aside-item-icon">
+                  <EllipsisHorizontalSharp />
+                </n-icon>
+              </n-dropdown>
+            </div>
+          </transition-group>
+        </VueDraggableNext>
         <n-button class="mt-4 w-56" @click="addNewProjectGroupClick">
           <template #icon>
             <n-icon>
@@ -97,6 +101,7 @@ import {
   AddOutline as AddIcon,
   EllipsisHorizontalSharp
 } from '@vicons/ionicons5'
+import { VueDraggableNext } from 'vue-draggable-next'
 import {
   getAllProjectGroup,
   saveAllProjectGroup,
@@ -110,6 +115,7 @@ import ProjectItem from './component/ProjectItem.vue'
 import ProjectEditModal from './component/ProjectEditModal.vue'
 import { generateUUID } from '@/utils/uuid'
 import ProjectHeader from './component/ProjectHeader.vue'
+import { updateSorted } from '@/api/PWApit'
 // 信息提示
 const message = useMessage()
 // 获取dialog
@@ -161,6 +167,18 @@ const hiddenCreateProject = () => {
 }
 /**
  * @Author roct
+ * @Description 拖拽侧边数据
+ * @Date 8:23 下午 2021/9/4
+ **/
+const draggableEnd = async () => {
+  try {
+    await saveAllProjectGroup(projectGroupList.value)
+  } catch (e) {
+    message.error('调整顺序失败')
+  }
+}
+/**
+ * @Author roct
  * @Description 创建新项目点击确定
  * @Date 12:11 上午 2021/9/4
  **/
@@ -202,7 +220,12 @@ const selectedItemClick = (item: ProjectItemGroupType) => {
 const addNewProjectGroupClick = async () => {
   const item = {
     id: generateUUID(),
-    name: '新建项目组' + (projectGroupList.value.length + 1)
+    name:
+      '新建项目组' +
+      (projectGroupList.value.length + 1) +
+      '(' +
+      generateUUID().substr(Math.floor(Math.random() * 10 + 1), 2) +
+      ')'
   }
   projectGroupList.value.push(item)
   await saveAllProjectGroup(projectGroupList.value)
