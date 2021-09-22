@@ -26,10 +26,6 @@ export const jbOptions = [
   {
     label: '大特写',
     value: '大特写'
-  },
-  {
-    label: '自定义',
-    value: '自定义'
   }
 ]
 export const jwOptions = [

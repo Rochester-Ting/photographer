@@ -15,7 +15,7 @@
       />
       <div class="pt-2 text-base text-gray-500 desc-content">
         <div v-if="!editStatus">{{ value }}</div>
-        <textarea v-else v-model="value" class="textarea" />
+        <textarea v-else v-model="value" class="textarea" placeholder="单击此处添加项目备注" />
       </div>
     </div>
     <div class="absolute right-10 top-4">

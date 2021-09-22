@@ -103,6 +103,7 @@ export interface PssxType {
   description: string
   remark: string
   yghs: string
+  cc: string
 }
 // 演职人员
 export interface YzryType {
@@ -115,7 +116,7 @@ export interface YzryType {
 // 通告详情
 export interface TGDetailType {
   title: string // 标题
-  time: string | number // 拍摄时间
+  time: string | number | undefined // 拍摄时间
   address: string // 拍摄地址
   remark?: string // 备注
   description: string // 内容描述

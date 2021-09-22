@@ -117,7 +117,7 @@
           v-for="(item, index) of detail.pssx"
           :key="index"
         >
-          <span class="w-20">{{ props.name }}</span>
+          <span class="w-20">{{ item.cc }}</span>
           <n-popselect
             v-model:value="item.nwj"
             :options="options"
@@ -198,7 +198,12 @@
             border-solid border-b border-gray-300
           "
         >
-          <span class="w-20">{{ props.name }}</span>
+          <input
+            class="hidden-input w-20"
+            v-model="pssx.cc"
+            placeholder="场次"
+          />
+          <!-- <span class="w-20">{{ props.name }}</span> -->
           <n-popselect
             v-model:value="pssx.nwj"
             :options="options"
@@ -395,7 +400,7 @@ const route = useRoute()
 
 let detail: TGDetailType = reactive({
   title: '', // 标题
-  time: null, // 拍摄时间
+  time: undefined, // 拍摄时间
   address: '', // 拍摄地址
   remark: '', // 备注
   description: '', // 内容描述
@@ -407,7 +412,8 @@ let pssx: PssxType = reactive({
   ryj: '',
   description: '',
   remark: '',
-  yghs: ''
+  yghs: '',
+  cc: ''
 })
 
 let yzry: YzryType = reactive({
@@ -498,7 +504,7 @@ const yzryAddClick = async () => {
  * @Date 5:16 下午 2021/9/12
  **/
 const pssxAddClick = async () => {
-  if (!pssx.nwj || !pssx.ryj || !pssx.description || !pssx.yghs) {
+  if (!pssx.nwj || !pssx.ryj || !pssx.description || !pssx.yghs || !pssx.cc) {
     message.error('请填写完整的拍摄顺序')
     return
   }
@@ -508,6 +514,7 @@ const pssxAddClick = async () => {
   pssx.description = ''
   pssx.remark = ''
   pssx.yghs = ''
+  pssx.cc = ''
   await saveDetail()
 }
 const getDetail = async () => {

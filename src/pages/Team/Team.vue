@@ -64,7 +64,7 @@
             >
               年龄:
             </div>
-            <n-input v-model:value="newUser.age" placeholder="输入员工年龄" />
+            <n-input v-model:value="newUser.age" placeholder="输入员工职务" />
           </n-input-group>
           <n-input-group class="mt-5">
             <div
@@ -83,7 +83,7 @@
             </div>
             <n-input
               v-model:value="newUser.address"
-              placeholder="输入员工地址"
+              placeholder="输入电子邮箱"
             />
           </n-input-group>
           <n-input-group class="mt-5">
@@ -101,7 +101,7 @@
             >
               印象:
             </div>
-            <n-input v-model:value="newUser.tags" placeholder="输入员工印象" />
+            <n-input v-model:value="newUser.tags" placeholder="输入电话号码" />
           </n-input-group>
 
           <n-input-group>
@@ -117,9 +117,6 @@
                 mr-4
               "
             ></div>
-            <div class="text-gray-300 text-sm">
-              要输入多个印象可用逗号分割. 比如:1,2
-            </div>
           </n-input-group>
         </div>
         <template #action>
@@ -152,9 +149,10 @@ const newUser: User = reactive({
   name: '',
   age: '',
   address: '',
-  tags: []
+  tags: [],
+  key: ''
 })
-const createColumns = ({ deleteClick }) => {
+const createColumns = ({ deleteClick }: any) => {
   return [
     {
       title: '姓名',
@@ -171,8 +169,8 @@ const createColumns = ({ deleteClick }) => {
     {
       title: '印象',
       key: 'tags',
-      render(row) {
-        const tags = row.tags.map((tagKey) => {
+      render(row: any) {
+        const tags = row.tags.map((tagKey: any) => {
           return h(
             NTag,
             {
@@ -192,7 +190,7 @@ const createColumns = ({ deleteClick }) => {
     {
       title: '操作',
       key: 'actions',
-      render(row) {
+      render(row: any) {
         return h(
           NButton,
           {
@@ -211,7 +209,7 @@ const createColumns = ({ deleteClick }) => {
   ]
 }
 const columns = createColumns({
-  deleteClick(rowData) {
+  deleteClick(rowData: any) {
     const idx = data.value.findIndex((item: User) => item.key === rowData.key)
     if (idx > -1) {
       data.value.splice(idx, 1)
@@ -226,7 +224,9 @@ const pagination = {
 
 const searchClick = () => {
   const item = data.value.find((item: any) => item.name === searchValue.value)
-  data.value = [item]
+  if (item) {
+    data.value = [item]
+  }
 }
 const clearSearchClick = () => {
   getUsers()
