@@ -34,7 +34,7 @@
         <div>
           <n-input-group class="mt-5">
             <div
-              style="height: 34px; width: 50px"
+              style="height: 34px; width: 60px"
               class="
                 flex-shrink-0
                 h-full
@@ -51,7 +51,7 @@
           </n-input-group>
           <n-input-group class="mt-5">
             <div
-              style="height: 34px; width: 50px"
+              style="height: 34px; width: 60px"
               class="
                 flex-shrink-0
                 h-full
@@ -62,13 +62,13 @@
                 mr-4
               "
             >
-              年龄:
+              职务:
             </div>
             <n-input v-model:value="newUser.age" placeholder="输入员工职务" />
           </n-input-group>
           <n-input-group class="mt-5">
             <div
-              style="height: 34px; width: 50px"
+              style="height: 34px; width: 60px"
               class="
                 flex-shrink-0
                 h-full
@@ -79,7 +79,7 @@
                 mr-4
               "
             >
-              地址:
+              电子邮箱:
             </div>
             <n-input
               v-model:value="newUser.address"
@@ -88,7 +88,7 @@
           </n-input-group>
           <n-input-group class="mt-5">
             <div
-              style="height: 34px; width: 50px"
+              style="height: 34px; width: 60px"
               class="
                 flex-shrink-0
                 h-full
@@ -99,7 +99,7 @@
                 mr-4
               "
             >
-              印象:
+              电话号码:
             </div>
             <n-input v-model:value="newUser.tags" placeholder="输入电话号码" />
           </n-input-group>
@@ -159,15 +159,15 @@ const createColumns = ({ deleteClick }: any) => {
       key: 'name'
     },
     {
-      title: '年龄',
+      title: '职务',
       key: 'age'
     },
     {
-      title: '地址',
+      title: '电子邮箱',
       key: 'address'
     },
     {
-      title: '印象',
+      title: '电话号码',
       key: 'tags',
       render(row: any) {
         const tags = row.tags.map((tagKey: any) => {
