@@ -16,7 +16,7 @@
         src="@/assets/aside/icon.jpeg"
         alt=""
       />
-      <span class="text-gray-400 mt-5">Roman Kutepoy</span>
+      <span class="text-gray-400 mt-5">新用户</span>
       <span class="text-gray-300 mt-1 mb-5" style="font-size: 14px">
         导演、制片人
       </span>

@@ -219,7 +219,7 @@
           </n-popselect>
           <n-popselect
             v-model:value="pssx.ryj"
-            :options="options"
+            :options="options1"
             size="medium"
             trigger="click"
           >
@@ -431,6 +431,10 @@ let options = [
   {
     label: '外景',
     value: '外景'
+  },
+  {
+    label: '外景 + 内景',
+    value: '外景 + 内景'
   }
 ]
 
