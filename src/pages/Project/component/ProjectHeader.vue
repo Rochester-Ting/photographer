@@ -9,9 +9,11 @@
       px-10
       justify-between
     "
+    style="background-color: white"
   >
     <Header />
     <n-button
+      type="primary"
       @click="createNewProjectClick"
       :disabled="props.projectGroupList.length === 0"
     >

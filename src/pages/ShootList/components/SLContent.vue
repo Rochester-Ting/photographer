@@ -1,317 +1,319 @@
 <template>
-  <div class="p-10 pt-5 flex-auto w-full">
-    <div class="text-3xl pb-5">{{ props.name }}</div>
-    <div>
-      <div class="flex items-center h-10 bg-gray-50 text-gray-500 text-sm">
-        <span class="w-20 pl-2">场次</span>
-        <span class="w-20 pl-2">镜号</span>
-        <span class="flex-auto pl-2">内容描述</span>
-        <span class="w-32 pl-4">景别</span>
-        <span class="w-52 pl-4">镜头类型</span>
-        <span class="w-40 pl-4">机位运动</span>
-        <span class="w-40 pl-2">备注</span>
-        <span class="w-32 pl-4">操作</span>
-      </div>
-      <VueDraggableNext v-model="data" @change="draggableEnd">
-        <transition-group>
-          <div
-            class="
-              flex
-              items-center
-              w-full
-              h-10
-              text-gray-500 text-sm text-gray-500
-            "
-            v-for="(item, index) of data"
-            :key="index"
-          >
-            <input
-              class="input w-20 h-10"
-              :value="props.name"
-              type="text"
-              :disabled="true"
-              @blur="updateRequest"
-              placeholder="场次"
-            />
-            <input
-              class="input w-20 h-10"
-              v-model="item.jh"
-              type="text"
-              @blur="updateRequest"
-              placeholder="镜号"
-            />
-            <input
-              class="input flex-auto"
-              v-model="item.nrms"
-              type="text"
-              @blur="updateRequest"
-              placeholder="请输入内容描述"
-            />
+  <div class="p-10 pt-5 flex-auto w-full" style="background-color: #f6f5f5">
+    <div class="p-10 rounded flex-auto w-full" style="background-color: white">
+      <div class="text-3xl pb-5">{{ props.name }}</div>
+      <div>
+        <div class="flex items-center h-10 bg-gray-50 text-gray-500 text-sm">
+          <span class="w-20 pl-2">场次</span>
+          <span class="w-20 pl-2">镜号</span>
+          <span class="flex-auto pl-2">内容描述</span>
+          <span class="w-32 pl-4">景别</span>
+          <span class="w-52 pl-4">镜头类型</span>
+          <span class="w-40 pl-4">机位运动</span>
+          <span class="w-40 pl-2">备注</span>
+          <span class="w-32 pl-4">操作</span>
+        </div>
+        <VueDraggableNext v-model="data" @change="draggableEnd">
+          <transition-group>
+            <div
+              class="
+                flex
+                items-center
+                w-full
+                h-10
+                text-gray-500 text-sm text-gray-500
+              "
+              v-for="(item, index) of data"
+              :key="index"
+            >
+              <input
+                class="input w-20 h-10"
+                :value="props.name"
+                type="text"
+                :disabled="true"
+                @blur="updateRequest"
+                placeholder="场次"
+              />
+              <input
+                class="input w-20 h-10"
+                v-model="item.jh"
+                type="text"
+                @blur="updateRequest"
+                placeholder="镜号"
+              />
+              <input
+                class="input flex-auto"
+                v-model="item.nrms"
+                type="text"
+                @blur="updateRequest"
+                placeholder="请输入内容描述"
+              />
 
-            <div class="w-32 pl-4">
-              <n-popselect
-                :options="jbOptions"
-                v-model:value="item.jb"
-                @update:value="updateRequest"
-                trigger="click"
-                scrollable
-              >
-                <div class="flex items-center cursor-pointer">
-                  {{ item.jb || '景别' }}
-                  <n-icon>
-                    <CaretDownSharp />
-                  </n-icon>
-                </div>
-              </n-popselect>
-            </div>
-            <div class="w-52 pl-4">
-              <n-popover trigger="click">
-                <template #trigger>
+              <div class="w-32 pl-4">
+                <n-popselect
+                  :options="jbOptions"
+                  v-model:value="item.jb"
+                  @update:value="updateRequest"
+                  trigger="click"
+                  scrollable
+                >
                   <div class="flex items-center cursor-pointer">
-                    {{
-                      !item.jtgd && !item.hmgt && !item.dsqx
-                        ? '镜头类型'
-                        : (item.jtgd ? item.jtgd : '') +
-                          '/' +
-                          (item.dsqx ? item.dsqx : '') +
-                          '/' +
-                          (item.hmgt ? item.hmgt : '')
-                    }}
+                    {{ item.jb || '景别' }}
                     <n-icon>
                       <CaretDownSharp />
                     </n-icon>
                   </div>
-                </template>
-                <div class="w-80 h-80 bg-white flex flex-wrap">
-                  <div class="w-1/2 h-1/2 flex-col">
-                    <div class="font-bold">镜头高度</div>
-                    <n-radio-group
-                      class="ml-2"
-                      v-model:value="item.jtgd"
-                      @update:value="updateRequest"
-                    >
-                      <n-space>
-                        <n-radio
-                          v-for="(song, index) of jtOptions"
-                          :key="index"
-                          :value="song.value"
-                        >
-                          {{ song.label }}
-                        </n-radio>
-                      </n-space>
-                    </n-radio-group>
+                </n-popselect>
+              </div>
+              <div class="w-52 pl-4">
+                <n-popover trigger="click">
+                  <template #trigger>
+                    <div class="flex items-center cursor-pointer">
+                      {{
+                        !item.jtgd && !item.hmgt && !item.dsqx
+                          ? '镜头类型'
+                          : (item.jtgd ? item.jtgd : '') +
+                            '/' +
+                            (item.dsqx ? item.dsqx : '') +
+                            '/' +
+                            (item.hmgt ? item.hmgt : '')
+                      }}
+                      <n-icon>
+                        <CaretDownSharp />
+                      </n-icon>
+                    </div>
+                  </template>
+                  <div class="w-80 h-80 bg-white flex flex-wrap">
+                    <div class="w-1/2 h-1/2 flex-col">
+                      <div class="font-bold">镜头高度</div>
+                      <n-radio-group
+                        class="ml-2"
+                        v-model:value="item.jtgd"
+                        @update:value="updateRequest"
+                      >
+                        <n-space>
+                          <n-radio
+                            v-for="(song, index) of jtOptions"
+                            :key="index"
+                            :value="song.value"
+                          >
+                            {{ song.label }}
+                          </n-radio>
+                        </n-space>
+                      </n-radio-group>
+                    </div>
+                    <div class="w-1/2 h-1/2">
+                      <div class="font-bold">德式倾斜</div>
+                      <n-radio-group
+                        class="ml-2"
+                        v-model:value="item.dsqx"
+                        @update:value="updateRequest"
+                      >
+                        <n-space>
+                          <n-radio
+                            v-for="(song, index) of dsqxOptions"
+                            :key="index"
+                            :value="song.value"
+                          >
+                            {{ song.label }}
+                          </n-radio>
+                        </n-space>
+                      </n-radio-group>
+                    </div>
+                    <div class="w-1/2 h-1/2">
+                      <div class="font-bold">画面/构图</div>
+                      <n-radio-group
+                        class="ml-2"
+                        v-model:value="item.hmgt"
+                        @update:value="updateRequest"
+                      >
+                        <n-space>
+                          <n-radio
+                            v-for="(song, index) of hmgtOptions"
+                            :key="index"
+                            :value="song.value"
+                          >
+                            {{ song.label }}
+                          </n-radio>
+                        </n-space>
+                      </n-radio-group>
+                    </div>
+                    <div class="w-1/2 h-1/2" style="position: relative">
+                      <n-button
+                        class="absolute bottom-2 left-2"
+                        @click="resetJt(item)"
+                        >重置</n-button
+                      >
+                    </div>
                   </div>
-                  <div class="w-1/2 h-1/2">
-                    <div class="font-bold">德式倾斜</div>
-                    <n-radio-group
-                      class="ml-2"
-                      v-model:value="item.dsqx"
-                      @update:value="updateRequest"
-                    >
-                      <n-space>
-                        <n-radio
-                          v-for="(song, index) of dsqxOptions"
-                          :key="index"
-                          :value="song.value"
-                        >
-                          {{ song.label }}
-                        </n-radio>
-                      </n-space>
-                    </n-radio-group>
+                </n-popover>
+              </div>
+              <div class="w-40 pl-4">
+                <n-popselect
+                  :options="jwOptions"
+                  v-model:value="item.jwyd"
+                  @update:value="updateRequest"
+                  trigger="click"
+                  scrollable
+                >
+                  <div class="flex items-center cursor-pointer">
+                    {{ item.jwyd || '机位运动' }}
+                    <n-icon>
+                      <CaretDownSharp />
+                    </n-icon>
                   </div>
-                  <div class="w-1/2 h-1/2">
-                    <div class="font-bold">画面/构图</div>
-                    <n-radio-group
-                      class="ml-2"
-                      v-model:value="item.hmgt"
-                      @update:value="updateRequest"
-                    >
-                      <n-space>
-                        <n-radio
-                          v-for="(song, index) of hmgtOptions"
-                          :key="index"
-                          :value="song.value"
-                        >
-                          {{ song.label }}
-                        </n-radio>
-                      </n-space>
-                    </n-radio-group>
-                  </div>
-                  <div class="w-1/2 h-1/2" style="position: relative">
-                    <n-button
-                      class="absolute bottom-2 left-2"
-                      @click="resetJt(item)"
-                      >重置</n-button
-                    >
-                  </div>
-                </div>
-              </n-popover>
-            </div>
-            <div class="w-40 pl-4">
-              <n-popselect
-                :options="jwOptions"
-                v-model:value="item.jwyd"
-                @update:value="updateRequest"
-                trigger="click"
-                scrollable
+                </n-popselect>
+              </div>
+              <input
+                class="input w-40"
+                v-model="item.bz"
+                type="text"
+                @blur="updateRequest"
+                placeholder="请输入内容描述"
+              />
+              <span
+                class="w-32 pl-4 cursor-pointer underline text-red-700"
+                @click="deleteShootDetailClick(item)"
               >
-                <div class="flex items-center cursor-pointer">
-                  {{ item.jwyd || '机位运动' }}
-                  <n-icon>
-                    <CaretDownSharp />
-                  </n-icon>
-                </div>
-              </n-popselect>
+                删除
+              </span>
             </div>
-            <input
-              class="input w-40"
-              v-model="item.bz"
-              type="text"
-              @blur="updateRequest"
-              placeholder="请输入内容描述"
-            />
-            <span
-              class="w-32 pl-4 cursor-pointer underline text-red-700"
-              @click="deleteShootDetailClick(item)"
-            >
-              删除
-            </span>
-          </div>
-        </transition-group>
-      </VueDraggableNext>
-      <div class="flex items-center h-10 text-gray-500 text-sm text-gray-500">
-        <input
-          class="input w-20 h-10"
-          :disabled="true"
-          :value="props.name"
-          type="text"
-          placeholder="场次"
-        />
-        <input
-          class="input w-20 h-10"
-          v-model="newData.jh"
-          type="text"
-          placeholder="镜号"
-        />
-        <input
-          class="input flex-auto"
-          v-model="newData.nrms"
-          type="text"
-          placeholder="请输入内容描述"
-        />
+          </transition-group>
+        </VueDraggableNext>
+        <div class="flex items-center h-10 text-gray-500 text-sm text-gray-500">
+          <input
+            class="input w-20 h-10"
+            :disabled="true"
+            :value="props.name"
+            type="text"
+            placeholder="场次"
+          />
+          <input
+            class="input w-20 h-10"
+            v-model="newData.jh"
+            type="text"
+            placeholder="镜号"
+          />
+          <input
+            class="input flex-auto"
+            v-model="newData.nrms"
+            type="text"
+            placeholder="请输入内容描述"
+          />
 
-        <div class="w-32 pl-4">
-          <n-popselect
-            :options="jbOptions"
-            v-model:value="newData.jb"
-            trigger="click"
-            scrollable
-          >
-            <div class="flex items-center cursor-pointer">
-              {{ newData.jb || '景别' }}
-              <n-icon>
-                <CaretDownSharp />
-              </n-icon>
-            </div>
-          </n-popselect>
-        </div>
-        <div class="w-52 pl-4">
-          <n-popover trigger="click">
-            <template #trigger>
+          <div class="w-32 pl-4">
+            <n-popselect
+              :options="jbOptions"
+              v-model:value="newData.jb"
+              trigger="click"
+              scrollable
+            >
               <div class="flex items-center cursor-pointer">
-                {{
-                  !newData.jtgd && !newData.hmgt && !newData.dsqx
-                    ? '镜头类型'
-                    : (newData.jtgd ? newData.jtgd : '') +
-                      '/' +
-                      (newData.dsqx ? newData.dsqx : '') +
-                      '/' +
-                      (newData.hmgt ? newData.hmgt : '')
-                }}
+                {{ newData.jb || '景别' }}
                 <n-icon>
                   <CaretDownSharp />
                 </n-icon>
               </div>
-            </template>
-            <div class="w-80 h-80 bg-white flex flex-wrap">
-              <div class="w-1/2 h-1/2 flex-col">
-                <div class="font-bold">镜头高度</div>
-                <n-radio-group class="ml-2" v-model:value="newData.jtgd">
-                  <n-space>
-                    <n-radio
-                      v-for="(song, index) of jtOptions"
-                      :key="index"
-                      :value="song.value"
-                    >
-                      {{ song.label }}
-                    </n-radio>
-                  </n-space>
-                </n-radio-group>
+            </n-popselect>
+          </div>
+          <div class="w-52 pl-4">
+            <n-popover trigger="click">
+              <template #trigger>
+                <div class="flex items-center cursor-pointer">
+                  {{
+                    !newData.jtgd && !newData.hmgt && !newData.dsqx
+                      ? '镜头类型'
+                      : (newData.jtgd ? newData.jtgd : '') +
+                        '/' +
+                        (newData.dsqx ? newData.dsqx : '') +
+                        '/' +
+                        (newData.hmgt ? newData.hmgt : '')
+                  }}
+                  <n-icon>
+                    <CaretDownSharp />
+                  </n-icon>
+                </div>
+              </template>
+              <div class="w-80 h-80 bg-white flex flex-wrap">
+                <div class="w-1/2 h-1/2 flex-col">
+                  <div class="font-bold">镜头高度</div>
+                  <n-radio-group class="ml-2" v-model:value="newData.jtgd">
+                    <n-space>
+                      <n-radio
+                        v-for="(song, index) of jtOptions"
+                        :key="index"
+                        :value="song.value"
+                      >
+                        {{ song.label }}
+                      </n-radio>
+                    </n-space>
+                  </n-radio-group>
+                </div>
+                <div class="w-1/2 h-1/2">
+                  <div class="font-bold">德式倾斜</div>
+                  <n-radio-group class="ml-2" v-model:value="newData.dsqx">
+                    <n-space>
+                      <n-radio
+                        v-for="(song, index) of dsqxOptions"
+                        :key="index"
+                        :value="song.value"
+                      >
+                        {{ song.label }}
+                      </n-radio>
+                    </n-space>
+                  </n-radio-group>
+                </div>
+                <div class="w-1/2 h-1/2">
+                  <div class="font-bold">画面/构图</div>
+                  <n-radio-group class="ml-2" v-model:value="newData.hmgt">
+                    <n-space>
+                      <n-radio
+                        v-for="(song, index) of hmgtOptions"
+                        :key="index"
+                        :value="song.value"
+                      >
+                        {{ song.label }}
+                      </n-radio>
+                    </n-space>
+                  </n-radio-group>
+                </div>
+                <div class="w-1/2 h-1/2" style="position: relative">
+                  <n-button
+                    class="absolute bottom-2 left-2"
+                    @click="resetJt(newData)"
+                    >重置</n-button
+                  >
+                </div>
               </div>
-              <div class="w-1/2 h-1/2">
-                <div class="font-bold">德式倾斜</div>
-                <n-radio-group class="ml-2" v-model:value="newData.dsqx">
-                  <n-space>
-                    <n-radio
-                      v-for="(song, index) of dsqxOptions"
-                      :key="index"
-                      :value="song.value"
-                    >
-                      {{ song.label }}
-                    </n-radio>
-                  </n-space>
-                </n-radio-group>
+            </n-popover>
+          </div>
+          <div class="w-40 pl-4">
+            <n-popselect
+              :options="jwOptions"
+              v-model:value="newData.jwyd"
+              trigger="click"
+              scrollable
+            >
+              <div class="flex items-center cursor-pointer">
+                {{ newData.jwyd || '机位运动' }}
+                <n-icon>
+                  <CaretDownSharp />
+                </n-icon>
               </div>
-              <div class="w-1/2 h-1/2">
-                <div class="font-bold">画面/构图</div>
-                <n-radio-group class="ml-2" v-model:value="newData.hmgt">
-                  <n-space>
-                    <n-radio
-                      v-for="(song, index) of hmgtOptions"
-                      :key="index"
-                      :value="song.value"
-                    >
-                      {{ song.label }}
-                    </n-radio>
-                  </n-space>
-                </n-radio-group>
-              </div>
-              <div class="w-1/2 h-1/2" style="position: relative">
-                <n-button
-                  class="absolute bottom-2 left-2"
-                  @click="resetJt(newData)"
-                  >重置</n-button
-                >
-              </div>
-            </div>
-          </n-popover>
-        </div>
-        <div class="w-40 pl-4">
-          <n-popselect
-            :options="jwOptions"
-            v-model:value="newData.jwyd"
-            trigger="click"
-            scrollable
+            </n-popselect>
+          </div>
+          <input
+            class="input w-40"
+            v-model="newData.bz"
+            type="text"
+            placeholder="请输入内容描述"
+          />
+          <div
+            class="w-32 pl-4 cursor-pointer underline text-green-700"
+            @click="addNewShootDetailClick"
           >
-            <div class="flex items-center cursor-pointer">
-              {{ newData.jwyd || '机位运动' }}
-              <n-icon>
-                <CaretDownSharp />
-              </n-icon>
-            </div>
-          </n-popselect>
-        </div>
-        <input
-          class="input w-40"
-          v-model="newData.bz"
-          type="text"
-          placeholder="请输入内容描述"
-        />
-        <div
-          class="w-32 pl-4 cursor-pointer underline text-green-700"
-          @click="addNewShootDetailClick"
-        >
-          添加
+            添加
+          </div>
         </div>
       </div>
     </div>

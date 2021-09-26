@@ -8,6 +8,7 @@
       w-48
       flex-shrink-0
       border-r border-solid border-gray-50
+      aside
     "
   >
     <div class="mt-20 flex flex-col items-center">
@@ -91,4 +92,9 @@ const changeRouter = (Name: string) => {
   emit('pushNext', Name)
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.aside {
+  background: #23282D;
+  color: white;
+}
+</style>

@@ -8,6 +8,7 @@
       overflow-auto
       flex-shrink-0
     "
+    style="background-color: #d3e0ea"
   >
     <div class="mt-4">通告管理</div>
     <VueDraggableNext v-model="TGList" @change="draggableEnd">
@@ -34,7 +35,7 @@
       </transition-group>
     </VueDraggableNext>
 
-    <n-button class="mt-4 w-56" @click="addNewTGClick">
+    <n-button type="primary" class="mt-4 w-56" @click="addNewTGClick">
       <template #icon>
         <n-icon>
           <add-icon />

@@ -14,6 +14,7 @@
           overflow-auto
           flex-shrink-0
         "
+        style="background-color: #d3e0ea"
       >
         <div class="mt-4">项目组管理</div>
         <VueDraggableNext v-model="projectGroupList" @change="draggableEnd">
@@ -39,7 +40,7 @@
             </div>
           </transition-group>
         </VueDraggableNext>
-        <n-button class="mt-4 w-56" @click="addNewProjectGroupClick">
+        <n-button type="primary" class="mt-4 w-56" @click="addNewProjectGroupClick">
           <template #icon>
             <n-icon>
               <add-icon />
@@ -55,10 +56,10 @@
           p-5
           flex flex-wrap
           overflow-auto
-          bg-gray-200
           pl-10
           content-start
         "
+        style="background-color: #F6F5F5"
       >
         <ProjectItem
           v-for="(item, index) of projectList"

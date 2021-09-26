@@ -10,6 +10,7 @@
         px-10
         justify-between
       "
+        style="background-color: #ffffff"
     >
       <n-breadcrumb>
         <n-breadcrumb-item @click="toProjectList"> 所有项目 </n-breadcrumb-item>

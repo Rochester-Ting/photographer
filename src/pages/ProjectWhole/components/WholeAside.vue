@@ -8,6 +8,7 @@
       overflow-auto
       flex-shrink-0
     "
+    style="background-color: #d3e0ea"
   >
     <div class="mt-4">表单管理</div>
     <VueDraggableNext v-model="PWList" @change="draggableEnd">
@@ -34,7 +35,7 @@
       </transition-group>
     </VueDraggableNext>
 
-    <n-button class="mt-4 w-56" @click="addNewPWClick">
+    <n-button type="primary" class="mt-4 w-56" @click="addNewPWClick">
       <template #icon>
         <n-icon>
           <add-icon />

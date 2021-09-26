@@ -10,13 +10,14 @@
         px-10
         justify-between
       "
+      style="background-color: white;"
     >
       <n-breadcrumb>
         <n-breadcrumb-item> 日程安排 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
     <div class="sl-content flex p-5">
-      <div class="bg w-full h-full"></div>
+      <div class="bg-img2 w-full h-full"></div>
     </div>
   </div>
 </template>
@@ -31,7 +32,7 @@
 <style scoped lang="scss">
 .sl-content {
   height: calc(100vh - 64px);
-  .bg {
+  .bg-img2 {
     background-image: url('../../assets/rcap.png');
     background-repeat: no-repeat;
     background-position: top center;

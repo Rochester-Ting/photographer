@@ -16,7 +16,7 @@
       </n-breadcrumb>
     </div>
     <div class="sl-content flex p-5">
-      <div class="bg w-full h-full"></div>
+      <div class="bg-img w-full h-full"></div>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@
 <style scoped lang="scss">
 .sl-content {
   height: calc(100vh - 64px);
-  .bg {
+  .bg-img {
     background-image: url('../../assets/gg.png');
     background-repeat: no-repeat;
     background-position: top center;

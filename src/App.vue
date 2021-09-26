@@ -22,6 +22,15 @@ const themeOverrides: GlobalThemeOverrides = {
   },
   TimePicker: {
     borderColor: 'transparent'
+  },
+  Menu: {
+    itemIconColor: '#ffffff',
+    itemIconColorHover: '#ffffff',
+    itemIconColorActive: '#ffffff',
+    itemTextColor: '#ffffff',
+    itemTextColorHover: '#ffffff',
+    itemTextColorActive: '#ffffff',
+    itemColorActive: '#0878B0'
   }
 }
 </script>

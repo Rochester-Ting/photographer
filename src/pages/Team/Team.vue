@@ -10,120 +10,132 @@
         px-10
         justify-between
       "
+      style="background-color: white"
     >
       <n-breadcrumb>
         <n-breadcrumb-item> 团队管理 </n-breadcrumb-item>
       </n-breadcrumb>
     </div>
-    <div class="sl-content flex-col p-5">
-      <div class="flex items-center justify-between">
-        <n-input-group>
-          <n-input v-model:value="searchValue" :style="{ width: '300px' }" />
-          <n-button type="default" @click="searchClick">搜索</n-button>
-          <n-button type="default" @click="clearSearchClick">清空</n-button>
-        </n-input-group>
-        <n-button type="default" ghost @click="addClick">添加</n-button>
-      </div>
-      <n-data-table
-        class="mt-10"
-        :columns="columns"
-        :data="data"
-        :pagination="pagination"
-      />
-      <n-modal v-model:show="showModal" preset="dialog" title="添加员工">
-        <div>
-          <n-input-group class="mt-5">
-            <div
-              style="height: 34px; width: 60px"
-              class="
-                flex-shrink-0
-                h-full
-                leading-none
-                flex
-                items-center
-                justify-center
-                mr-4
-              "
-            >
-              员工名:
-            </div>
-            <n-input v-model:value="newUser.name" placeholder="输入员工名字" />
-          </n-input-group>
-          <n-input-group class="mt-5">
-            <div
-              style="height: 34px; width: 60px"
-              class="
-                flex-shrink-0
-                h-full
-                leading-none
-                flex
-                items-center
-                justify-center
-                mr-4
-              "
-            >
-              职务:
-            </div>
-            <n-input v-model:value="newUser.age" placeholder="输入员工职务" />
-          </n-input-group>
-          <n-input-group class="mt-5">
-            <div
-              style="height: 34px; width: 60px"
-              class="
-                flex-shrink-0
-                h-full
-                leading-none
-                flex
-                items-center
-                justify-center
-                mr-4
-              "
-            >
-              电子邮箱:
-            </div>
-            <n-input
-              v-model:value="newUser.address"
-              placeholder="输入电子邮箱"
-            />
-          </n-input-group>
-          <n-input-group class="mt-5">
-            <div
-              style="height: 34px; width: 60px"
-              class="
-                flex-shrink-0
-                h-full
-                leading-none
-                flex
-                items-center
-                justify-center
-                mr-4
-              "
-            >
-              电话号码:
-            </div>
-            <n-input v-model:value="newUser.tags" placeholder="输入电话号码" />
-          </n-input-group>
-
+    <div class="sl-content flex-col p-5" style="background-color: #f6f5f5">
+      <div
+        class="p-10 rounded flex-auto w-full"
+        style="background-color: white"
+      >
+        <div class="flex items-center justify-between">
           <n-input-group>
-            <div
-              style="width: 50px"
-              class="
-                flex-shrink-0
-                h-full
-                leading-none
-                flex
-                items-center
-                justify-center
-                mr-4
-              "
-            ></div>
+            <n-input v-model:value="searchValue" :style="{ width: '300px' }" />
+            <n-button type="default" @click="searchClick">搜索</n-button>
+            <n-button type="default" @click="clearSearchClick">清空</n-button>
           </n-input-group>
+          <n-button type="primary" @click="addClick">添加</n-button>
         </div>
-        <template #action>
-          <n-button @click.stop="showModal = false">取消</n-button>
-          <n-button @click.stop="addNewUsersClick">确定</n-button>
-        </template>
-      </n-modal>
+        <n-data-table
+          class="mt-10"
+          :columns="columns"
+          :data="data"
+          :pagination="pagination"
+        />
+        <n-modal v-model:show="showModal" preset="dialog" title="添加员工">
+          <div>
+            <n-input-group class="mt-5">
+              <div
+                style="height: 34px; width: 60px"
+                class="
+                  flex-shrink-0
+                  h-full
+                  leading-none
+                  flex
+                  items-center
+                  justify-center
+                  mr-4
+                "
+              >
+                员工名:
+              </div>
+              <n-input
+                v-model:value="newUser.name"
+                placeholder="输入员工名字"
+              />
+            </n-input-group>
+            <n-input-group class="mt-5">
+              <div
+                style="height: 34px; width: 60px"
+                class="
+                  flex-shrink-0
+                  h-full
+                  leading-none
+                  flex
+                  items-center
+                  justify-center
+                  mr-4
+                "
+              >
+                职务:
+              </div>
+              <n-input v-model:value="newUser.age" placeholder="输入员工职务" />
+            </n-input-group>
+            <n-input-group class="mt-5">
+              <div
+                style="height: 34px; width: 60px"
+                class="
+                  flex-shrink-0
+                  h-full
+                  leading-none
+                  flex
+                  items-center
+                  justify-center
+                  mr-4
+                "
+              >
+                电子邮箱:
+              </div>
+              <n-input
+                v-model:value="newUser.address"
+                placeholder="输入电子邮箱"
+              />
+            </n-input-group>
+            <n-input-group class="mt-5">
+              <div
+                style="height: 34px; width: 60px"
+                class="
+                  flex-shrink-0
+                  h-full
+                  leading-none
+                  flex
+                  items-center
+                  justify-center
+                  mr-4
+                "
+              >
+                电话号码:
+              </div>
+              <n-input
+                v-model:value="newUser.tags"
+                placeholder="输入电话号码"
+              />
+            </n-input-group>
+
+            <n-input-group>
+              <div
+                style="width: 50px"
+                class="
+                  flex-shrink-0
+                  h-full
+                  leading-none
+                  flex
+                  items-center
+                  justify-center
+                  mr-4
+                "
+              ></div>
+            </n-input-group>
+          </div>
+          <template #action>
+            <n-button @click.stop="showModal = false">取消</n-button>
+            <n-button @click.stop="addNewUsersClick">确定</n-button>
+          </template>
+        </n-modal>
+      </div>
     </div>
   </div>
 </template>
@@ -280,4 +292,8 @@ const addNewUsersClick = () => {
   saveUsers()
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.sl-content {
+  height: calc(100vh - 64px);
+}
+</style>

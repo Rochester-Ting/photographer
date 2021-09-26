@@ -1,13 +1,16 @@
 <template>
-  <div class="m-10 mt-5 flex-auto w-full overflow-y-auto overflow-x-hidden">
+  <div
+    class="pl-20 pr-20 pt-5 flex-auto w-full overflow-y-auto overflow-x-hidden"
+    style="background-color: #f6f5f5"
+  >
     <div
       class="
-        bg-gray-100
         flex flex-col
         items-center
         pb-10
         overflow-y-auto overflow-x-hidden
       "
+      style="background-color: white;"
     >
       <div class="flex items-center text-3xl mt-10">
         <n-gradient-text
